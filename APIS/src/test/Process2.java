@@ -24,7 +24,9 @@ public class Process2 {
 		configuration.put("localPath", "C:/Users/jmgd_/Desktop/descarga");//Ruta local donde se descarga un repositorio
 		configuration.put("emailList", "i32gaduj@uco.es");	//Lista de emails("a@uco.es,b@uco.es[...]")
 		configuration.put("subject", "Prueba proceso 2");		//Asunto del mensaje ( para enviar correos )
-
+		configuration.put("user", "jmgdtfg@gmail.com");		//Cuenta que se usa
+		configuration.put("password", "tfg_pass");			//Contraseña de la cuenta
+		configuration.put("server", "gmail");				//Tipo de servidor ( disponible gmail y hotmail)
 		//Componente de entrada
 		GithubRepositoryInput input = new GithubRepositoryInput();
 		//Componente de procesamiento
