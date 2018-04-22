@@ -1,10 +1,14 @@
 package inputComponents;
 
+import java.util.List;
 import java.util.Map;
+
+import document.Document;
 //Interfaz de los componentes de entrada
+// Lo de <T extends Document<?>> limita el tipo de dato a documentos
 public interface InputComponent {
-	/*Función que podrá tener como parámetro de entrada una configuración
-	 * y que devolverá cualquier tipo de objeto (Tweet, tracks, mails...)*/
-	Object execute(Map<String, String> configuration);
+	/*Funcion que podra tener como parametro de entrada una configuracion
+	 * y que devolvera cualquier tipo de objeto (Tweet, tracks, mails...)*/
+	List<Document> execute(Map<String, String> configuration);
 
 }

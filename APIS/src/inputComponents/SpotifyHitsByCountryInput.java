@@ -11,21 +11,24 @@ import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 
 import document.Document;
 import document.TrackDocument;
+import spotify.SpotifyHitsPlaylistFactory;
 import spotify.SpotifyManager;
 
+public class SpotifyHitsByCountryInput implements InputComponent{
 
-public class SpotifyPlaylistInput implements InputComponent{
-	//Función que devuelve toda la información de una playlist
 	@Override
 	public List<Document> execute(Map<String, String> configuration) {
+		SpotifyHitsPlaylistFactory factory = new SpotifyHitsPlaylistFactory();
+		String idPlaylist = factory.getPlaylist(configuration.get("country"));
+
 		List<Document> listDocument = new ArrayList<Document>();
-		
+
 		try {
 			SpotifyManager sm = new SpotifyManager();
 			Playlist playlist = sm.getPlaylist(
-					configuration.get("country"), 
-					configuration.get("IdUserSpotify"), 
-					configuration.get("IdPlaylist"));
+					configuration.get("country"), //País
+					"spotifycharts", 			//Usuario propio de spotify
+					idPlaylist);				//Id de la playlist del país
 
 			for (PlaylistTrack track : playlist.getTracks().getItems()){
 				//Una playlist es un conjunto de canciones
@@ -36,8 +39,9 @@ public class SpotifyPlaylistInput implements InputComponent{
 		} catch (SpotifyWebApiException | IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return listDocument;
 
 	}
+
 }

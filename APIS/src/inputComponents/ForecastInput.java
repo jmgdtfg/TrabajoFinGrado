@@ -5,17 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 import document.Document;
-import document.WeatherDocument;
+import document.ForecastDocument;
 import net.aksingh.owmjapis.api.APIException;
 import net.aksingh.owmjapis.model.param.WeatherData;
 import openweathermap.AllWeatherData;
 import openweathermap.OpenWeatherMapManager;
 
-public class WeatherInput implements InputComponent{
-	//Función que devuelve el tiempo actual
+public class ForecastInput implements InputComponent{
+
 	@Override
 	public List<Document> execute(Map<String, String> configuration) {
-
 		OpenWeatherMapManager weather = new OpenWeatherMapManager();
 		List<Document> listDocument = new ArrayList<Document>();
 		
@@ -30,7 +29,7 @@ public class WeatherInput implements InputComponent{
 			//Se crea una nueva clase CurrentWeather que almacena los datos del tiempo actual
 			AllWeatherData cw = new AllWeatherData(condition,temp,humidity,cloudiness,forecast);
 			
-			WeatherDocument document = new WeatherDocument();
+			ForecastDocument document = new ForecastDocument();
 			document.setRawData(cw);
 			listDocument.add(document);
 			
@@ -40,7 +39,6 @@ public class WeatherInput implements InputComponent{
 			e.printStackTrace();
 		}
 		return listDocument;
-		
 	}
 
 }

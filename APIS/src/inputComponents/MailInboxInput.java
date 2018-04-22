@@ -1,39 +1,32 @@
 package inputComponents;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-
+import document.Document;
+import document.MessageDocument;
 import mail.MailManager;
+import mail.Mensaje;
 
 public class MailInboxInput implements InputComponent{
 
-	private String user_;		//Correo del usuario
-	private String password_;	//Contraseña de la cuenta
-	private String server_;		//Servidor. Válido => "gmail"(por defecto) y "hotmail"
-
-	//Constructor por defecto
-	public MailInboxInput(){};
-
-	//Constructor parametrizado
-	public MailInboxInput(String user, String password, String server){
-		user_ = user;
-		password_ = password;
-		server_ = server;
-	}
-
 	//Función que devuelve la bandeja de entrada
 	@Override
-	public Object execute(Map<String, String> configuration) {
+	public List<Document> execute(Map<String, String> configuration) {
 
-		if (user_.isEmpty()){
-			MailManager mm = new MailManager();
-			//Devuelve el objeto Message[]
-			return mm.getInbox();
+		List<Document> listDocument = new ArrayList<Document>();
+
+		MailManager mm = new MailManager(
+				configuration.get("user"),
+				configuration.get("password"),
+				configuration.get("server"));
+
+		for (Mensaje m : mm.getInbox()){
+			MessageDocument document = new MessageDocument();
+			document.setRawData(m);
+			listDocument.add(document);
 		}
-		else{
-			MailManager mm = new MailManager(user_,password_,server_);
-			//Devuelve el objeto Message[]
-			return mm.getInbox();
-		}
+		return listDocument;
 
 	}
 
