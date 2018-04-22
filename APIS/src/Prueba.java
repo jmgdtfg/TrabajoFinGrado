@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import document.Document;
 import inputComponents.*;		//Todos los componentes de entrada
 import outputComponents.*;		//Todos los componentes de salida
 import processingComponents.*;	//Todos los componentes de procesamiento
@@ -15,77 +16,93 @@ public class Prueba {
 
 	public static void main(String[] args){
 
-		Map <String, String> configuration = new HashMap<String,String>();
-		
-		//****PARÁMETROS DE CONFIGURACIÓN GENERICOS
-		
-		/*Palabra de búsqueda. Se utiliza en: 
-		 * - TwitterSearchInput 
-		 * - SpotifySearchInput
-		 * - MailSearchInboxInput
-		 * - GithubSearchRepositoryInput
-		 * */
-		configuration.put("word", "la");
-		/*País. Se utiliza en:
-		 * - TwitterTrendingTopicsInput (El país se pasa en inglés)
-		 * - Todos los Input Components de Spotify (El país se pasa en castellano)
-		 * */
-		configuration.put("country", "España");
+		//Mapas de configuración
+
+		Map <String, String> twitterConfig = new HashMap<String,String>();
+		Map <String, String> spotifyConfig = new HashMap<String,String>();
+		Map <String, String> githubConfig = new HashMap<String,String>();
+		Map <String, String> mailConfig = new HashMap<String,String>();
+		Map <String, String> slackConfig = new HashMap<String,String>();
+		Map <String, String> weatherConfig = new HashMap<String,String>();
+		Map <String, String> rssConfig = new HashMap<String,String>();
+		Map <String, String> sheetConfig = new HashMap<String,String>();
+
+
+
+
 		
 		//****PARAMETROS DE CONFIGURACIÓN ÚNICOS DE TWITTER
 		
 		//Esta key solo funciona correctamente con los valores "hashtag" y "word"
-		configuration.put("twitterSearchType", "hashtag");	
-		configuration.put("hashtag", "Sevilla");			//Hashtag clave para realizar búsqueda
+		twitterConfig.put("twitterSearchType", "hashtag");	
+		twitterConfig.put("hashtag", "Madrid");			//Hashtag clave para realizar búsqueda
+		twitterConfig.put("top", "5");
+		twitterConfig.put("word", "la");
+		twitterConfig.put("days", "20");//Parametro de busqueda
+		twitterConfig.put("results", "1000");//Parametro de busqueda
+		twitterConfig.put("country", "Spain");
+		twitterConfig.put("intervalEnd", "1");	//Valor del fin de un intervalo de tiempo ( en dias )
+		twitterConfig.put("intervalStart", "8");//Valor del inicio de un intervalo de tiempo ( en dias ) 
+		
 		
 		//****PARAMETROS DE CONFIGURACIÓN ÚNICOS DE EMAIL
 		
 		//Esta key solo funciona correctamente con los valores "content","sender" y "subject"
-		configuration.put("mailSearchType", "subject");
-		configuration.put("emailList", "i32gaduj@uco.es");	//Lista de emails("a@uco.es,b@uco.es[...]")
-		configuration.put("subject", "probando...");		//Asunto del mensaje ( para enviar correos )
-
+		mailConfig.put("mailSearchType", "subject");
+		mailConfig.put("emailList", "i32gaduj@uco.es");	//Lista de emails("a@uco.es,b@uco.es[...]")
+		mailConfig.put("subject", "probando...");		//Asunto del mensaje ( para enviar correos )
+		mailConfig.put("user", "jmgdtfg@gmail.com");		//Cuenta que se usa
+		mailConfig.put("password", "tfg_pass");			//Contraseña de la cuenta
+		mailConfig.put("server", "gmail");				//Tipo de servidor ( disponible gmail y hotmail)
+		mailConfig.put("word", "prueba");				//Palabra de búsqueda
+		
 		//****PARAMETROS DE CONFIGURACIÓN ÚNICOS DE SPOTIFY
 		
 		//Esta key solo funciona correctamente los valores "tracks","albums","artists" y "playlists"
-		configuration.put("spotifySearchType", "tracks");		
-		configuration.put("idArtist", "3bgsNtcf5d5h9jbQbohfBK");	//Id de extremoduro en spotify
-		configuration.put("idTrack", "1KPLNOTQDSWe68ea6JUjpx");		//Id de "la vereda de la puerta de atras"
-		configuration.put("genre", "rock");							//Genero musical
-		configuration.put("IdUserSpotify", "soniamqmz");			//Id de usuario
-		configuration.put("IdPlaylist", "2XI2yekXk221aNsTN18pXr");	//Id de playlist
+		spotifyConfig.put("spotifySearchType", "tracks");		
+		spotifyConfig.put("idArtist", "3bgsNtcf5d5h9jbQbohfBK");	//Id de extremoduro en spotify
+		spotifyConfig.put("idTrack", "1KPLNOTQDSWe68ea6JUjpx");		//Id de "la vereda de la puerta de atras"
+		spotifyConfig.put("genre", "rock");							//Genero musical
+		spotifyConfig.put("IdUserSpotify", "spotifycharts");			//Id de usuario
+		spotifyConfig.put("IdPlaylist", "37i9dQZEVXbNFJfN1Vw8d9");	//Id de playlist
+		spotifyConfig.put("word", "Top 50");
+		spotifyConfig.put("country", "Alemania");						
+		spotifyConfig.put("top", "5");
+		
 		
 		//****PARAMETROS DE CONFIGURACIÓN ÚNICOS DE GITHUB
-		configuration.put("repositoryUrl", "https://github.com/jmgdtfg/TFG/");//URL de un repositorio
-		configuration.put("localPath", "C:/Users/jmgd_/Desktop/descarga");//Ruta local donde se descarga un repositorio
-		configuration.put("searchLanguage", "Java");//Se utiliza para buscar resultados con un lenguaje de programación concreto.
-		configuration.put("gistName", "---GIST---");//Nombre de un Gist
-		configuration.put("gistDescription", "Gist de prueba...");//Descripción del Gist
+		githubConfig.put("repositoryUrl", "https://github.com/jmgdtfg/TFG/");//URL de un repositorio
+		githubConfig.put("localPath", "C:/Users/jmgd_/Desktop/descarga");//Ruta local donde se descarga un repositorio
+		githubConfig.put("searchLanguage", "Java");//Se utiliza para buscar resultados con un lenguaje de programación concreto.
+		githubConfig.put("gistName", "---GIST---");//Nombre de un Gist
+		githubConfig.put("gistDescription", "Gist de prueba...");//Descripción del Gist
+		githubConfig.put("word", "la");//Palabra de búsqueda
 		
 		//****PARAMETROS DE CONFIGURACIÓN ÚNICOS DE SLACK
-		configuration.put("channelName", "general"); 				//Nombre del canal de slack
-		configuration.put("slackUserMail", "jmgd_3@outlook.com");	//Email de un usuario en slack
+		slackConfig.put("channelName", "general"); 				//Nombre del canal de slack
+		slackConfig.put("slackUserMail", "jmgd_3@outlook.com");	//Email de un usuario en slack
 		
 		//****PARAMETROS DE CONFIGURACIÓN ÚNICOS DE RSS
-		configuration.put("rssUrl", "https://futbol.as.com/rss/futbol/primera.xml"); //URL del canal RSS
+		rssConfig.put("rssUrl", "http://ep00.epimg.net/rss/elpais/portada.xml"); //URL del canal RSS
+		rssConfig.put("limit", "5");
 		
 		//****PARAMETROS DE CONFIGURACIÓN ÚNICOS DE OPENWEATHERMAP
-		configuration.put("weatherCity", "Sevilla");				//Ciudad de la que se obtendrán los datos
+		weatherConfig.put("weatherCity", "Sevilla");				//Ciudad de la que se obtendrán los datos
 		
 		//****PARAMETROS DE CONFIGURACIÓN ÚNICOS DE SPREADSHEET
-		configuration.put("sheetName", "Datos");					//Nombre de la hoja de cálculo
+		sheetConfig.put("sheetName", "Datos");					//Nombre de la hoja de cálculo
 		
 		//EJEMPLO
-		/*
-		TwitterSearchInput input = new TwitterSearchInput(20,300);
+		//MailSearchInboxInput input = new MailSearchInboxInput();// no va
+		//RepositoryInformationProcess process = new RepositoryInformationProcess();
+		//EmailOutput output = new EmailOutput();
+		
+		SlackUsersListInput input = new SlackUsersListInput();
+
+		SpreadSheetInput input2 = new SpreadSheetInput();
 		SlackChannelMessageOutput output = new SlackChannelMessageOutput();
-		//TwitterOutput output = new TwitterOutput();
-		TopFiveLikesProcess process = new TopFiveLikesProcess();
-		
-		output.execute(process.execute(input.execute(configuration), configuration), configuration);
-		
-		*/
-		
+
+		output.execute(input2.execute(sheetConfig), slackConfig);
 		
 	}
 }
