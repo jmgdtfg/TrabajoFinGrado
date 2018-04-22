@@ -1,19 +1,28 @@
 package outputComponents;
 
+import java.util.List;
 import java.util.Map;
 
+import document.Document;
 import mail.MailManager;
 
-public class EmailOutput implements OutputComponent{
+public class EmailOutput implements OutputComponent {
 
-	//Envía los datos por correo.
 	@Override
-	public void execute(Object data, Map<String, String> configuration) {
+	public void execute(List<Document> data, Map<String, String> configuration) {		
+		MailManager mm = new MailManager(
+				configuration.get("user"),
+				configuration.get("password"),
+				configuration.get("server"));
+		String message = "";
 		
-		MailManager mm = new MailManager();
-		String message = (String) data;
-		mm.sendEmail(configuration.get("emailList"), configuration.get("subject"), message);
+		for (Document document : data) {
+			message += document.getDataAsString();
+			message += "\n";
+		}
+		message += "--------------------------------\n";
 		
+		mm.sendEmail(configuration.get("emailList"), configuration.get("subject"), message);		
 	}
 
 }

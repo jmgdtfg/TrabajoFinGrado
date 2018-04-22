@@ -4,67 +4,51 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.wrapper.spotify.model_objects.specification.ArtistSimplified;
-import com.wrapper.spotify.model_objects.specification.Paging;
-import com.wrapper.spotify.model_objects.specification.Playlist;
-import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 
+import com.wrapper.spotify.model_objects.specification.Track;
 
-public class TopPlaylistTracksProcess implements ProcessComponent{
+import document.Document;
+import document.TrackDocument;
+
+public class TopTracksProcess implements ProcessComponent{
 	
-	private int numTop_; //numero de valores que devolver谩 el top
-	
-	//Constructor parametrizado obligatorio de la clase
-	public TopPlaylistTracksProcess(int numTop){
-		numTop_=numTop;
-	}
-	
-	//Funci贸n que devuelve las canciones m谩s escuchadas de una playlist
+
+	//Funci髇 que devuelve las canciones m醩 escuchadas de una playlist
 	@Override
-	public Object execute(Object data, Map<String, String> configuration) {
+	public List<Document> execute(List<Document> data, Map<String, String> configuration) {
 		
-		Playlist p = (Playlist) data;
-		Paging<PlaylistTrack> t = p.getTracks();
-		PlaylistTrack[] tracks = t.getItems();		
-		//Lista de String. Cada elemento contiene la informaci贸n de una canci贸n
-		List<String> listTracks = new ArrayList<String>();
-		String artists = "Artista(s): ";
-		
-		List<PlaylistTrack> trackList = new ArrayList<PlaylistTrack>();	//Lista de tracks
-		List<PlaylistTrack> sortTracks = new ArrayList<PlaylistTrack>();//Lista ordenada de tracks
-		
-		//Transforma PlaylistTrack[] a List<PlaylistTrack>
-		for (PlaylistTrack pt : tracks){
-			trackList.add(pt);
-		}
-		//Se obtiene la lista de tracks ordenada
-		for (PlaylistTrack pt : trackList){
-			//Si el elemento es m谩s popular lo a帽ade al principio
-			if (pt.getTrack().getPopularity() > trackList.get(0).getTrack().getPopularity()){
-				sortTracks.add(0, pt);
-			}
-		}
-		//Recorre la lista ordenada de tracks recogiendo la informaci贸n necesaria
-		for (PlaylistTrack track : sortTracks){
-			//Obtiene el artista(s)
-			ArtistSimplified[] at = track.getTrack().getArtists();
-			for (ArtistSimplified a : at){
-				artists = artists.concat(a.getName()+" ");
-			}
-			//Concatena a los artistas el t铆tulo de la canci贸n
-			listTracks.add(artists+" | T铆tulo: "+track.getTrack().getName());
-			artists = "Artista(s): ";
+		int top = Integer.valueOf(configuration.get("top")).intValue();
+		List<Document> listDocument = new ArrayList<Document>();
+		if (data.size() <= top){
+			return data;
 		}
 		
-		//Elaboraci贸n del mensaje
-		String message = "Top canciones: \n\n";
-		for (int i = 0; i < numTop_ ; i++){
-			message = message.concat("\n"+listTracks.get(i));
+		//Proceso de ordenaci髇 de tweets con m醩 likes
+		List<Track> sortList = new ArrayList<Track>();
+		for (Document document : data){
+			Track track = (Track) document.getRawData();
+			sortList.add(track);
 		}
-		message = message.concat("\n\n-----------------------------------------------------\n");
+		//sortList.sort(Comparator.comparing(Track::getPopularity));
 		
-		//Devuelve un tipo string
-		return message;
+		//Se devuelven solo el n鷐ero de resultados pedido en la configuraci髇
+		
+		for (int i = 0; i < top ; i++){
+			TrackDocument document = new TrackDocument();
+			document.setRawData(sortList.get(i));
+			listDocument.add(document);
+		}
+		
+		return listDocument;
+	}
+
+	@Override
+	public boolean isCompatibleWith(Document document) {
+		if (document instanceof TrackDocument) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

@@ -1,48 +1,51 @@
 package processingComponents;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import document.Document;
+import document.TweetDocument;
 import twitter4j.Status;
 
-public class TopLikesProcess implements ProcessComponent{
+public class TopLikesProcess implements ProcessComponent {
 	
-	private int numTop_;					//Número de resultados para el top
-	private static List<Status> topLikes_;	//Lista que contiene tweets
-
-	//Constructor parametrizado obligatorio de la clase.
-	public TopLikesProcess(int numTop){
-		numTop_ = numTop;
-	}
-	
-	@SuppressWarnings("unchecked")
 	@Override
-	public Object execute(Object data, Map<String, String> configuration) {
-
-
-		List<Status> tweets = (List<Status>) data;
-
-		//Si hay menos de numTop_ tweets se finalizará el proceso.
-		if (tweets.size()<numTop_){
-			String message = "No se encontraron suficientes datos";
-			return message;
+	public List<Document> execute(List<Document> data, Map<String, String> configuration) {
+		int top = Integer.valueOf(configuration.get("top")).intValue();
+		//List<TweetDocument> topLikesTweets = new ArrayList<TweetDocument>();
+		List<Document> listDocument = new ArrayList<Document>();
+		if (data.size() <= top){
+			return data;
+		}
+		//Proceso de ordenación de tweets con más likes
+		List<Status> sortList = new ArrayList<Status>();
+		for (Document document : data){
+			Status tweet = (Status) document.getRawData();
+			sortList.add(tweet);
+		}
+		sortList.sort(Comparator.comparing(Status::getFavoriteCount).reversed());
+		
+		//Se devuelven solo el número de resultados pedido en la configuración
+		
+		for (int i = 0; i < top ; i++){
+			TweetDocument document = new TweetDocument();
+			document.setRawData(sortList.get(i));
+			listDocument.add(document);
 		}
 
-		//Se ordenan los tweets de más a menos Favoritos
-		tweets.sort(Comparator.comparing(Status::getFavoriteCount).reversed());
-		topLikes_ = tweets;
-		//Elaboración del mensaje
-		String message = "TOP "+numTop_+": Tweets con más me gusta\n\n";
+		return listDocument;
 
-		for (int i = 0; i < numTop_ ; i++){
-			int number = i + 1;
-			message = message.concat(number+") "+topLikes_.get(i).getUser().getName()+ ": " +topLikes_.get(i).getText()+"\n");
+	}
+
+	@Override
+	public boolean isCompatibleWith(Document document) {
+		if (document instanceof TweetDocument) {
+			return true;
 		}
-		message = message.concat("------------------------------------------------\n");	
 
-		return message;
-
+		return false;
 	}
 
 }

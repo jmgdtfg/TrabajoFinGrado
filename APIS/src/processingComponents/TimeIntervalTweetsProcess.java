@@ -4,48 +4,58 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-
+import document.Document;
+import document.TweetDocument;
 import twitter4j.Status;
 //!!!LA SALIDA DE ESTA FUNCIÓN ES EL PARÁMETRO DE ENTRADA DE OTRO PROCESS COMPONENT
 public class TimeIntervalTweetsProcess implements ProcessComponent{
 
-	private int intervalEnd_;
-	private int intervalStart_;
-
-	//Constructor parametrizado obligatorio de la clase
-	public TimeIntervalTweetsProcess(int intervalEnd, int intervalStart){
-		intervalEnd_=intervalEnd;
-		intervalStart_=intervalStart;
-	}
-
-	//Función que filtra un intervalo de tweets
-	@SuppressWarnings("unchecked")
 	@Override
-	public Object execute(Object data, Map<String, String> configuration) {
+	public List<Document> execute(List<Document> data, Map<String, String> configuration) {
 
+		int intervalEnd = Integer.valueOf(configuration.get("intervalEnd")).intValue();
+		int intervalStart = Integer.valueOf(configuration.get("intervalStart")).intValue();
+		List<Document> listDocument = new ArrayList<Document>();
 
-		List<Status> tweets = (List<Status>) data;		//Lista con todos los tweets recibidos por parámetro
-		List<Status> filterTweets = new ArrayList<>();	//Lista donde se almacenaran los tweets filtrados
 
 		//Comprobación de que los valores del intervalo sean válidos
-		if (intervalEnd_<=0 || intervalStart_<=0)
+		if (intervalEnd<=0 || intervalStart<=0)
 			return null;
-		if (intervalStart_-intervalEnd_ <=0)
+		if (intervalStart-intervalEnd <=0)
 			return null;
 
 		//Declaración de las fechas de inicio y fin del intervalo
 		Calendar dateBefore = Calendar.getInstance();
-		dateBefore.add(Calendar.DATE, -intervalEnd_);
+		dateBefore.add(Calendar.DATE, -intervalEnd);
 		Calendar dateAfter = Calendar.getInstance();
-		dateAfter.add(Calendar.DATE, -intervalStart_);
+		dateAfter.add(Calendar.DATE, -intervalStart);
+
+		//Para tratar la información se almacenará en una lista de tweets
+		List<Status> tweetList = new ArrayList<Status>();
+		for (Document document : data){
+			Status tweet = (Status) document.getRawData();
+			tweetList.add(tweet);
+		}
 		
-		for (Status s:tweets){
+		for (Status s:tweetList){
 			if (s.getCreatedAt().before(dateBefore.getTime()) && s.getCreatedAt().after(dateAfter.getTime())){
-				filterTweets.add(s);	//Si el tweet está en el intervalo se añade a la lista
+				TweetDocument document = new TweetDocument();
+				document.setRawData(s);	//Si el tweet está en el intervalo se añade a la lista
+				listDocument.add(document);
 			}
 		}
-		//Devuelve un objeto de tipo List<Status>
-		return filterTweets;
+
+		return listDocument;
+
+	}
+
+	@Override
+	public boolean isCompatibleWith(Document document) {
+		if (document instanceof TweetDocument) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

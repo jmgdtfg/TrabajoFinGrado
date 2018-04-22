@@ -1,38 +1,56 @@
 package processingComponents;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import document.Document;
+import document.FeedBackDocument;
+import document.TweetDocument;
 import twitter4j.Status;
 
 public class FeedbackTweetsProcess implements ProcessComponent{
-	//Función que devuelve información de menciones, retweets y me gusta
-	@SuppressWarnings("unchecked")
+	
 	@Override
-	public Object execute(Object data, Map<String, String> configuration) {
+	public List<Document> execute(List<Document> data, Map<String, String> configuration) {
 
-		List<Status> tweets = (List<Status>) data;
-
+		List<Document> listDocument = new ArrayList<Document>();
+		
+		Map <String,Integer> feedback = new HashMap<String,Integer>();
 		int mentions = 0;
 		int favorites = 0;
 		int retweets = 0;
-
-		//Se realiza un recuento
-		for (Status s : tweets){
+		
+		//Para tratar la información se almacenará en una lista de tweets
+		List<Status> tweetList = new ArrayList<Status>();
+		for (Document document : data){
+			Status tweet = (Status) document.getRawData();
+			tweetList.add(tweet);
+		}
+		
+		for (Status s : tweetList){
 			favorites = favorites + s.getFavoriteCount();
 			retweets = retweets + s.getRetweetCount();
 			mentions = mentions + s.getUserMentionEntities().length;
 		}
+		feedback.put("favorites", favorites);
+		feedback.put("retweets", retweets);
+		feedback.put("mentions", mentions);
+		FeedBackDocument document = new FeedBackDocument();
+		document.setRawData(feedback);
+		listDocument.add(document);
+		return listDocument;
 
-		//Elaboración del mensaje
-		String message = "- Feedback de los tweets -\n\n";
-		message = message.concat("Retweets: "+retweets);
-		message = message.concat("\nMe gusta: "+favorites);
-		message = message.concat("\nMenciones: "+mentions);
-		message = message.concat("\n------------------------------------------------\n");	
-		
-		//Se devuelve la información en un String
-		return message;
+	}
+
+	@Override
+	public boolean isCompatibleWith(Document document) {
+		if (document instanceof TweetDocument) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

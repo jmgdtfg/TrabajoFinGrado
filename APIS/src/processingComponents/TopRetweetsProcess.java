@@ -1,45 +1,51 @@
 package processingComponents;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import document.Document;
+import document.TweetDocument;
 import twitter4j.Status;
 //Función que devuevlve el top de retweets
 public class TopRetweetsProcess implements ProcessComponent{
 
-	private int numTop_;						//Número de resultados que se obtendrán para el top
-	private static List<Status> topRetweets_; 	//Lista que contiene tweets
-	
-	//Constructor parametrizado obligatorio de la clase
-	public TopRetweetsProcess(int numTop){
-		numTop_ = numTop;
-	}
-	
-	@SuppressWarnings("unchecked")
 	@Override
-	public Object execute(Object data, Map<String, String> configuration) {
-		
-		List<Status> tweets = (List<Status>) data;
-		
-		//Si hay menos de numTop_ tweets se finalizará el proceso.
-		if (tweets.size()<numTop_){
-			String message = "No se encontraron suficientes datos";
-			return message;
+	public List<Document> execute(List<Document> data, Map<String, String> configuration) {
+		int top = Integer.valueOf(configuration.get("top")).intValue();
+
+		List<Document> listDocument = new ArrayList<Document>();
+		if (data.size() <= top){
+			return data;
 		}
-		//Se ordenan los tweets de mayor a menor Retweets
-		tweets.sort(Comparator.comparing(Status::getRetweetCount).reversed());
-		topRetweets_ = tweets;
-		//Elaboración del mensaje
-		String message = "TOP "+numTop_+": Tweets mas retwiteados\n\n";
-		
-		for (int i = 0; i < numTop_ ; i++){
-			int number = i + 1;
-			message = message.concat(number+") "+topRetweets_.get(i).getUser().getName()+ ": " +topRetweets_.get(i).getText()+"\n");
+		//Proceso de ordenación de tweets con más retweets
+		List<Status> sortList = new ArrayList<Status>();
+		for (Document document : data){
+			Status tweet = (Status) document.getRawData();
+			sortList.add(tweet);
 		}
-		message = message.concat("------------------------------------------------\n");	
+		sortList.sort(Comparator.comparing(Status::getRetweetCount).reversed());
 		
-		return message;
+		//Se devuelven solo el número de resultados pedido en la configuración
+		
+		for (int i = 0; i < top ; i++){
+			TweetDocument document = new TweetDocument();
+			document.setRawData(sortList.get(i));
+			listDocument.add(document);
+		}
+
+		return listDocument;
+
+	}
+
+	@Override
+	public boolean isCompatibleWith(Document document) {
+		if (document instanceof TweetDocument) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

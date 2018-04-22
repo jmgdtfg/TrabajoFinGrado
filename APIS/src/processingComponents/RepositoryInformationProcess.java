@@ -3,6 +3,7 @@ package processingComponents;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,15 +11,23 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 
+import document.Document;
+import document.FileDocument;
+import document.FileMapDocument;
 import github.GithubManager;
 
 public class RepositoryInformationProcess implements ProcessComponent{
 	//Función que obtiene la información de un repositorio.
 	@Override
-	public Object execute(Object data, Map<String, String> configuration) {
-		GithubManager gm = new GithubManager();
-		File file = (File) data;
+	public List<Document> execute(List<Document> data, Map<String, String> configuration) {
 		
+		List<Document> listDocument = new ArrayList<Document>();
+		
+		GithubManager gm = new GithubManager();
+
+			
+			File file = (File) data.get(0).getRawData();
+
 		// Lista para los valores devueltos por getDirectoryTree(path)
 		List<Path> pathFiles = new LinkedList<Path>();
 		
@@ -44,26 +53,24 @@ public class RepositoryInformationProcess implements ProcessComponent{
 							value);
 				}
 			}
+			//Por último se añade a un nuevo documento
+			FileMapDocument document2 = new FileMapDocument();
+			document2.setRawData(datos);
+			listDocument.add(document2);
 			
-			//Elaboración del mensaje
-			String message = "Tipos de archivos que contiene el repositorio "+file.getParent()+":"+"\n\n";
-
-			for (Map.Entry<String,Integer> entry : datos.entrySet()) {
-				String key = entry.getKey();
-				int value = entry.getValue();
-				if (key == "")
-					message = message.concat("Otros"+": "+value+"\n");
-				else
-					message = message.concat(key+": "+value+"\n");
-			}
-			//Devuelve el mnesaje
-			return message;
 		} catch (IOException e) {
-			// ***
 			e.printStackTrace();
-			return null;
 		}
+		return listDocument;
 
+	}
+
+	@Override
+	public boolean isCompatibleWith(Document document) {
+		if (document instanceof FileDocument) {
+			return true;
+		}
+		return false;
 	}
 
 }
