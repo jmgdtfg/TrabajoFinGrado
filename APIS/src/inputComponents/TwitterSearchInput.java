@@ -35,7 +35,7 @@ public class TwitterSearchInput implements InputComponent{
 		}
 		else if(configuration.get("twitterSearchType").equals("word")){
 			try {
-				for (Status data : tm.searchByHashtag(configuration.get("word"),days,results)){	
+				for (Status data : tm.searchByWord(configuration.get("word"),days,results)){	
 					TweetDocument document = new TweetDocument();	
 					document.setRawData(data);
 					listDocument.add(document);

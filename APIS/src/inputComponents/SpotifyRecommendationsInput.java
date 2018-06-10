@@ -9,7 +9,7 @@ import com.wrapper.spotify.exceptions.SpotifyWebApiException;
 import com.wrapper.spotify.model_objects.specification.TrackSimplified;
 
 import document.Document;
-import document.TweetDocument;
+import document.TrackSimplifiedDocument;
 import spotify.SpotifyManager;
 
 public class SpotifyRecommendationsInput implements InputComponent{
@@ -25,7 +25,7 @@ public class SpotifyRecommendationsInput implements InputComponent{
 					configuration.get("idTrack"),		
 					configuration.get("genre"));							
 			for (TrackSimplified track : tracks) {
-				TweetDocument document = new TweetDocument();
+				TrackSimplifiedDocument document = new TrackSimplifiedDocument();
 				document.setRawData(track);
 				listDocument.add(document);
 			}

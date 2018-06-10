@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import document.Document;
-import document.TweetDocument;
-import twitter4j.Status;
 
-public class TimeIntervalTweetsProcess implements ProcessComponent{
+import document.Document;
+import document.MessageDocument;
+import mail.MessageData;
+
+public class TimeIntervalMailProcess implements ProcessComponent{
+
 
 	@Override
 	public List<Document> execute(List<Document> data, Map<String, String> configuration) {
@@ -30,17 +32,17 @@ public class TimeIntervalTweetsProcess implements ProcessComponent{
 		Calendar dateAfter = Calendar.getInstance();
 		dateAfter.add(Calendar.DATE, -intervalStart);
 
-		//Para tratar la información se almacenará en una lista de tweets
-		List<Status> tweetList = new ArrayList<Status>();
+		//Para tratar la información se almacenará en una lista de Emails
+		List<MessageData> messagesList = new ArrayList<MessageData>();
 		for (Document document : data){
-			Status tweet = (Status) document.getRawData();
-			tweetList.add(tweet);
+			MessageData message = (MessageData) document.getRawData();
+			messagesList.add(message);
 		}
 		
-		for (Status s:tweetList){
-			if (s.getCreatedAt().before(dateBefore.getTime()) && s.getCreatedAt().after(dateAfter.getTime())){
-				TweetDocument document = new TweetDocument();
-				document.setRawData(s);	//Si el tweet está en el intervalo se añade a la lista
+		for (MessageData s:messagesList){
+			if (s.getDate_().before(dateBefore.getTime()) && s.getDate_().after(dateAfter.getTime())){
+				MessageDocument document = new MessageDocument();
+				document.setRawData(s);	//Si el mensaje está en el intervalo se añade a la lista
 				listDocument.add(document);
 			}
 		}
@@ -51,11 +53,9 @@ public class TimeIntervalTweetsProcess implements ProcessComponent{
 
 	@Override
 	public boolean isCompatibleWith(Document document) {
-		if (document instanceof TweetDocument) {
+		if (document instanceof MessageDocument) {
 			return true;
 		}
-
 		return false;
 	}
-
 }

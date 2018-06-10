@@ -17,13 +17,13 @@ public class TopTracksProcess implements ProcessComponent{
 	@Override
 	public List<Document> execute(List<Document> data, Map<String, String> configuration) {
 		
-		int top = Integer.valueOf(configuration.get("top")).intValue();
+		int top = Integer.valueOf(configuration.get("topTracks")).intValue();
 		List<Document> listDocument = new ArrayList<Document>();
 		if (data.size() <= top){
 			return data;
 		}
 		
-		//Proceso de ordenación de tweets con más likes
+		//Proceso de ordenación de tracks
 		List<Track> sortList = new ArrayList<Track>();
 		for (Document document : data){
 			Track track = (Track) document.getRawData();

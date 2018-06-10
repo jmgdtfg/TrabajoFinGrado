@@ -1,6 +1,6 @@
 package document;
 
-import mail.Mensaje;
+import mail.MessageData;
 
 public class MessageDocument extends Document{
 
@@ -8,7 +8,7 @@ public class MessageDocument extends Document{
 	public String getDataAsString() {
 
 		String message = "";
-		Mensaje data = (Mensaje) getRawData();
+		MessageData data = (MessageData) getRawData();
 		message = "Enviado por: "+data.getFrom_()+"\n";
 		message += "Asunto: "+data.getSubject_()+"\n";
 		message += "Texto: "+data.getMessage_();

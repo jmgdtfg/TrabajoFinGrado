@@ -9,7 +9,7 @@ import com.wrapper.spotify.exceptions.SpotifyWebApiException;
 import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 
 import document.Document;
-import document.TrackDocument;
+import document.PlaylistSimplifiedDocument;
 import spotify.SpotifyManager;
 
 public class SpotifyTopPlaylistsInput implements InputComponent{
@@ -24,7 +24,7 @@ public class SpotifyTopPlaylistsInput implements InputComponent{
 
 
 			for (PlaylistSimplified track : sm.getTopPlaylists(configuration.get("country"))){
-				TrackDocument document = new TrackDocument();
+				PlaylistSimplifiedDocument document = new PlaylistSimplifiedDocument();
 				document.setRawData(track);
 				listDocument.add(document);
 			}

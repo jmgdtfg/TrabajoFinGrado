@@ -7,7 +7,7 @@ import java.util.Map;
 import document.Document;
 import document.MessageDocument;
 import mail.MailManager;
-import mail.Mensaje;
+import mail.MessageData;
 
 public class MailSearchInboxInput implements InputComponent{
 
@@ -19,21 +19,21 @@ public class MailSearchInboxInput implements InputComponent{
 		List<Document> listDocument = new ArrayList<Document>();
 		
 		if (configuration.get("mailSearchType").equals("content")){
-			for (Mensaje m : mm.filterByContent(configuration.get("word"))){
+			for (MessageData m : mm.filterByContent(configuration.get("word"))){
 				MessageDocument document = new MessageDocument();
 				document.setRawData(m);
 				listDocument.add(document);
 			}
 		}
 		else if (configuration.get("mailSearchType").equals("sender")){
-			for (Mensaje m : mm.filterBySender(configuration.get("word"))){
+			for (MessageData m : mm.filterBySender(configuration.get("word"))){
 				MessageDocument document = new MessageDocument();
 				document.setRawData(m);
 				listDocument.add(document);
 			}
 		}
 		else if (configuration.get("mailSearchType").equals("subject")){
-			for (Mensaje m : mm.filterBySubject(configuration.get("word"))){
+			for (MessageData m : mm.filterBySubject(configuration.get("word"))){
 				MessageDocument document = new MessageDocument();
 				document.setRawData(m);
 				listDocument.add(document);

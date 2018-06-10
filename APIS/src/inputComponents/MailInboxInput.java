@@ -6,7 +6,7 @@ import java.util.Map;
 import document.Document;
 import document.MessageDocument;
 import mail.MailManager;
-import mail.Mensaje;
+import mail.MessageData;
 
 public class MailInboxInput implements InputComponent{
 
@@ -21,7 +21,7 @@ public class MailInboxInput implements InputComponent{
 				configuration.get("password"),
 				configuration.get("server"));
 
-		for (Mensaje m : mm.getInbox()){
+		for (MessageData m : mm.getInbox()){
 			MessageDocument document = new MessageDocument();
 			document.setRawData(m);
 			listDocument.add(document);

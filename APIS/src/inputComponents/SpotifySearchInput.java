@@ -11,6 +11,8 @@ import com.wrapper.spotify.model_objects.specification.Artist;
 import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import com.wrapper.spotify.model_objects.specification.Track;
 
+import document.AlbumSimplifiedDocument;
+import document.ArtistDocument;
 import document.Document;
 import document.TrackDocument;
 import spotify.SpotifyManager;
@@ -36,7 +38,7 @@ public class SpotifySearchInput implements InputComponent{
 			else if (configuration.get("spotifySearchType").equals("albums")){
 				
 				for (AlbumSimplified album : sm.searchAlbums(configuration.get("word"), configuration.get("country"))){
-					TrackDocument document = new TrackDocument();
+					AlbumSimplifiedDocument document = new AlbumSimplifiedDocument();
 					document.setRawData(album);
 					listDocument.add(document);
 				}
@@ -45,7 +47,7 @@ public class SpotifySearchInput implements InputComponent{
 			else if (configuration.get("spotifySearchType").equals("artists")){
 
 				for (Artist artist: sm.searchArtists(configuration.get("word"), configuration.get("country"))){
-					TrackDocument document = new TrackDocument();
+					ArtistDocument document = new ArtistDocument();
 					document.setRawData(artist);
 					listDocument.add(document);
 				}

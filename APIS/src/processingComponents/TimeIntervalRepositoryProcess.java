@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+
+import org.eclipse.egit.github.core.Repository;
+
 import document.Document;
-import document.TweetDocument;
-import twitter4j.Status;
+import document.RepositoryDocument;
 
-public class TimeIntervalTweetsProcess implements ProcessComponent{
-
+public class TimeIntervalRepositoryProcess implements ProcessComponent{
 	@Override
 	public List<Document> execute(List<Document> data, Map<String, String> configuration) {
 
@@ -31,16 +32,16 @@ public class TimeIntervalTweetsProcess implements ProcessComponent{
 		dateAfter.add(Calendar.DATE, -intervalStart);
 
 		//Para tratar la información se almacenará en una lista de tweets
-		List<Status> tweetList = new ArrayList<Status>();
+		List<Repository> repositoryList = new ArrayList<Repository>();
 		for (Document document : data){
-			Status tweet = (Status) document.getRawData();
-			tweetList.add(tweet);
+			Repository repo = (Repository) document.getRawData();
+			repositoryList.add(repo);
 		}
 		
-		for (Status s:tweetList){
+		for (Repository s:repositoryList){
 			if (s.getCreatedAt().before(dateBefore.getTime()) && s.getCreatedAt().after(dateAfter.getTime())){
-				TweetDocument document = new TweetDocument();
-				document.setRawData(s);	//Si el tweet está en el intervalo se añade a la lista
+				RepositoryDocument document = new RepositoryDocument();
+				document.setRawData(s);	//Si el repositorio está en el intervalo se añade a la lista
 				listDocument.add(document);
 			}
 		}
@@ -51,10 +52,9 @@ public class TimeIntervalTweetsProcess implements ProcessComponent{
 
 	@Override
 	public boolean isCompatibleWith(Document document) {
-		if (document instanceof TweetDocument) {
+		if (document instanceof RepositoryDocument) {
 			return true;
 		}
-
 		return false;
 	}
 

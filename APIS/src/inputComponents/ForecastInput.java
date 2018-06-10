@@ -33,8 +33,6 @@ public class ForecastInput implements InputComponent{
 			document.setRawData(cw);
 			listDocument.add(document);
 			
-
-
 		} catch (APIException e) {
 			e.printStackTrace();
 		}
