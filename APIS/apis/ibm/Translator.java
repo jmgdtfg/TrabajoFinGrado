@@ -14,8 +14,8 @@ import com.ibm.watson.developer_cloud.language_translator.v2.model.TranslationRe
 
 public class Translator {
 
-	private String user_ = "e5c311ec-a52d-44a9-b372-0a8bbf1e1fd1";
-	private String password_ = "bAEg7DSyTYx1";
+	private String user_ = "1";
+	private String password_ = "";
 	private LanguageTranslator service_ = new LanguageTranslator();
 	//Constructor de la clase
 	public Translator(){
@@ -36,7 +36,7 @@ public class Translator {
 		if (il.getLanguages().get(0).getLanguage().isEmpty())
 			return "No se identifica el idioma a traducir";
 
-		//Comprobamos que el idioma esté disponible o asignamos inglés por defecto
+		//Comprobamos que el idioma estÃ© disponible o asignamos inglÃ©s por defecto
 		LanguagesFactory lf = new LanguagesFactory();
 		String target = lf.getLanguages().getOrDefault(language, "en");
 
@@ -55,7 +55,7 @@ public class Translator {
 			List<Translation> translations = result.getTranslations();
 			return translations.get(0).getTranslation();
 		}
-		//Hay que realizar una traducción intermedia al inglés para poder traducir.
+		//Hay que realizar una traducciÃ³n intermedia al inglÃ©s para poder traducir.
 		else{
 			TranslateOptions translateOptions = new TranslateOptions.Builder()
 					.addText(text)
