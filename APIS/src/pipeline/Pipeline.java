@@ -18,35 +18,31 @@ public class Pipeline {
 	private List<OutputComponent> output_ = new ArrayList<OutputComponent>(); 	//Obligatorio
 
 	//Función para añadir elementos de entrada
-	public void addInput(Object... input) {
+	public void addInput(InputComponent... input) {
 		//Se pueden usar varios inputs siempre que sean del mismo tipo
 		//FIXME: Podrían ser de tipos distintos para los procesos genéricos (?)
 		String type = input[0].getClass().getName();
-		for (Object in : input){
-			if (in.getClass().getName().equals(type) && in instanceof InputComponent){
+		for (InputComponent in : input){
+			if (in.getClass().getName().equals(type)){
 				InputComponent i = InputComponent.class.cast(in);
 				input_.add(i);
 			}
 		}
 	}
 	//Función para añadir componentes de procesamiento
-	public void addProcess(Object... process) {
+	public void addProcess(ProcessComponent... process) {
 		//Puede haber varios procesos para la misma información
-		for (Object pr : process){
-			if (pr instanceof ProcessComponent){
-				ProcessComponent p = ProcessComponent.class.cast(pr);
-				process_.add(p);
-			}
+		for (ProcessComponent pr : process){
+			ProcessComponent p = ProcessComponent.class.cast(pr);
+			process_.add(p);
 		}
 	}
 	//Función para añadir elementos de salida
-	public void addOutput(Object... output) {
+	public void addOutput(OutputComponent... output) {
 		//Puede haber varias salidas de información
-		for (Object out : output){
-			if (out instanceof OutputComponent){
-				OutputComponent o = OutputComponent.class.cast(out);
-				output_.add(o);
-			}
+		for (OutputComponent out : output){
+			OutputComponent o = OutputComponent.class.cast(out);
+			output_.add(o);
 		}
 	}
 	//Función que ejecuta el flujo de datos.
