@@ -2,7 +2,6 @@ package pipeline;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import document.Document;
 import inputComponents.InputComponent;
@@ -12,24 +11,48 @@ import processingComponents.ProcessComponent;
 
 //Clase que define la arquitetura del flujo de datos
 public class Pipeline {
+	
 	//Variables privadas de la clase Pipeline
 	private List<InputComponent> input_ = new ArrayList<InputComponent>();		//Obligatorio
 	private List<ProcessComponent> process_ = new ArrayList<ProcessComponent>();//Opcional
 	private List<OutputComponent> output_ = new ArrayList<OutputComponent>(); 	//Obligatorio
 
-	//Función para añadir elementos de entrada
+	//Getters y setters necesarios para poder serializar y deserializar
+	public List<InputComponent> getInput_() {
+		return input_;
+	}
+	public void setInput_(List<InputComponent> input_) {
+		this.input_ = input_;
+	}
+	public List<ProcessComponent> getProcess_() {
+		return process_;
+	}
+	public void setProcess_(List<ProcessComponent> process_) {
+		this.process_ = process_;
+	}
+	public List<OutputComponent> getOutput_() {
+		return output_;
+	}
+	public void setOutput_(List<OutputComponent> output_) {
+		this.output_ = output_;
+	}
+
+
+	/**
+	 * Función que añade un componente de entrada
+	 * @param input
+	 */
 	public void addInput(InputComponent... input) {
-		//Se pueden usar varios inputs siempre que sean del mismo tipo
-		//FIXME: Podrían ser de tipos distintos para los procesos genéricos (?)
-		String type = input[0].getClass().getName();
+
 		for (InputComponent in : input){
-			if (in.getClass().getName().equals(type)){
-				InputComponent i = InputComponent.class.cast(in);
-				input_.add(i);
-			}
+			InputComponent i = InputComponent.class.cast(in);
+			input_.add(i);
 		}
 	}
-	//Función para añadir componentes de procesamiento
+	/**
+	 * Función que añade un componente de procesamiento
+	 * @param process
+	 */
 	public void addProcess(ProcessComponent... process) {
 		//Puede haber varios procesos para la misma información
 		for (ProcessComponent pr : process){
@@ -37,7 +60,10 @@ public class Pipeline {
 			process_.add(p);
 		}
 	}
-	//Función para añadir elementos de salida
+	/**
+	 * Función que añade un componente de salida
+	 * @param output
+	 */
 	public void addOutput(OutputComponent... output) {
 		//Puede haber varias salidas de información
 		for (OutputComponent out : output){
@@ -45,20 +71,15 @@ public class Pipeline {
 			output_.add(o);
 		}
 	}
-	//Función que ejecuta el flujo de datos.
-	@SuppressWarnings("unchecked")
-	public void execute(Map<String, String>... configurations) {
-		/*
-		 * Se define la lista de configuraciones
-		 * Esta lista se irá vaciando de forma ordenada (FIFO)
-		 * Cada listConfiguration.get(0) [primer elemento]
-		 * Irá acompañado de listConfiguration.remove(0) [elimina primer elemento]
-		 * */
-		List<Map<String,String>> listConfigurations = new ArrayList<Map<String,String>>();
-		for (Map<String, String> config : configurations){
-			listConfigurations.add(config);
-		}
-		//-----------------------------
+
+	/**
+	 * Función que ejecuta el flujo de datos
+	 */
+	public Response execute() {
+		//Devolverá los resultados al servicio web
+		Response response = new Response();
+		StringBuilder logs = new StringBuilder();
+		
 		//FLUJO DE DATOS: ENTRADA(S) -> PROCESAMIENTO(S) -> SALIDA(S)
 
 		//Declaración de List<Document> en los que se unificará la información.
@@ -68,8 +89,7 @@ public class Pipeline {
 		//1) ENTRADA: Se unifican los inputs en uno solo:
 
 		for (InputComponent input : input_){
-			List<Document> newList = input.execute(listConfigurations.get(0));
-			listConfigurations.remove(0);
+			List<Document> newList = input.execute();
 			for (Document doc : newList){
 				inputData.add(doc);
 			}
@@ -77,19 +97,41 @@ public class Pipeline {
 
 		//2) PROCESAMIENTO:  Se realiza todo el procesamiento de la información
 		//Caso en el que NO hay elementos de procesamiento
-		if (process_ == null){}
+		if (process_ == null){
+			logs.append("No hay elementos de procesamiento\n");
+		}
 		else{
 			//Caso en el que SI hay elementos de procesamiento
 			int flag = 0;
 
+			//***COMPROBACIÓN DE TIPOS DE DATOS VALIDOS***
+			for (ProcessComponent process : process_){
+				for (Document doc : inputData){
+					if (process.isCompatibleWith(doc)){
+						logs.append(doc.getClass().getName());
+						logs.append(" es COMPATIBLE con ");
+						logs.append(process.getClass().getName());
+						logs.append("\n");
+
+					}
+					else{
+						System.out.println("ERROR");
+						logs.append(doc.getClass().getName());
+						logs.append(" es INCOMPATIBLE con ");
+						logs.append(process.getClass().getName());
+						logs.append("\n");
+						response.setResult_("ERROR: Se ha producido un error en el procesamiento");
+						return response;
+					}
+				}
+			}
+			//*********************************************
 			for (ProcessComponent process : process_){
 				if (flag == 0){
-					processData = process.execute(inputData, listConfigurations.get(0));
-					listConfigurations.remove(0);
+					processData = process.execute(inputData, process.getConfiguration());
 					flag = 1;
 				}else{
-					processData = process.execute(processData, listConfigurations.get(0));
-					listConfigurations.remove(0);
+					processData = process.execute(processData, process.getConfiguration());
 				}
 			}
 		}
@@ -98,15 +140,17 @@ public class Pipeline {
 		//Caso en el que NO hay elementos de procesamiento
 		if ( process_ == null){
 			for (OutputComponent output: output_){
-				output.execute(inputData, listConfigurations.get(0));
-				listConfigurations.remove(0);
+				output.execute(inputData, output.getConfiguration());
 			}
 		}else{
 			//Caso en el que SI hay elementos de procesamiento
 			for (OutputComponent output: output_){
-				output.execute(processData, listConfigurations.get(0));
-				listConfigurations.remove(0);
+				output.execute(processData, output.getConfiguration());
 			}
 		}
+		logs.append("El procesamiento se realizó con ÉXITO\n");
+		response.setLogs_(logs.toString());
+		response.setResult_("Status OK: Procesamiento realizado con éxito");
+		return response;
 	}
 }//Fin clase Pipeline
