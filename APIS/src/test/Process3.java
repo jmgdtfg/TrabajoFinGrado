@@ -12,6 +12,7 @@ import java.util.Map;
 
 import inputComponents.TwitterOwnTimelineInput;
 import outputComponents.EmailOutput;
+import pipeline.Pipeline;
 import processingComponents.FeedbackTweetsProcess;
 import processingComponents.TimeIntervalTweetsProcess;
 
@@ -42,18 +43,25 @@ public class Process3 {
 		
 		//Componente de entrada
 		TwitterOwnTimelineInput input = new TwitterOwnTimelineInput();
+		input.setConfiguration(twitterConfig);
 		//Componentes de procesamiento:
 		//Para coger los de la semana anterior se pondría 1(1 dia antes) y 8 (8 días antes)
 		TimeIntervalTweetsProcess process1 = new TimeIntervalTweetsProcess();
+		process1.setConfiguration(twitterConfig);
 		FeedbackTweetsProcess process2 = new FeedbackTweetsProcess();
+		process2.setConfiguration(twitterConfig);
 		//Componente de salida
 		EmailOutput output = new EmailOutput();
+		output.setConfiguration(mailConfig);
 
 		//Flujo de información
+		Pipeline pipeline = new Pipeline();
+		pipeline.addInput(input);
+		pipeline.addProcess(process1,process2);
+		pipeline.addOutput(output);
 		
-		output.execute(
-				process2.execute(
-						process1.execute(input.execute(twitterConfig), twitterConfig), twitterConfig), mailConfig);
+		pipeline.execute();
+		
 	}
 
 }

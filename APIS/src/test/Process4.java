@@ -9,15 +9,15 @@
 package test;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import document.Document;
+
 import inputComponents.ForecastInput;
 import inputComponents.SpotifyHitsByCountryInput;
 import inputComponents.TwitterSearchInput;
 import inputComponents.WeatherInput;
 import outputComponents.SlackChannelMessageOutput;
+import pipeline.Pipeline;
 import processingComponents.TopRetweetsProcess;
 import processingComponents.TopTracksProcess;
 
@@ -72,37 +72,27 @@ public class Process4 {
 
 		//Componentes de entrada
 		WeatherInput input1 = new WeatherInput();
+		input1.setConfiguration(weatherConfig);
 		ForecastInput input2 = new ForecastInput();
-
+		input2.setConfiguration(weatherConfig);
 		SpotifyHitsByCountryInput input3 = new SpotifyHitsByCountryInput();
-
+		input3.setConfiguration(spotifyConfig);
 		TwitterSearchInput input4 = new TwitterSearchInput();
-
+		input4.setConfiguration(twitterConfig);
 		TopRetweetsProcess process = new TopRetweetsProcess();
+		process.setConfiguration(twitterConfig);
 		TopTracksProcess process1 = new TopTracksProcess();
-
+		process1.setConfiguration(spotifyConfig);
 		//Componente de salida
 		SlackChannelMessageOutput output = new SlackChannelMessageOutput();
-
+		output.setConfiguration(slackConfig);
 		//Flujo de información
-
-		List<Document> listDocument = input1.execute(weatherConfig);
-		List<Document> listDocument2 = input2.execute(weatherConfig);
-		List<Document> listDocument3 = input3.execute(spotifyConfig);
-		List<Document> listDocument4 = input4.execute(twitterConfig);
-
-		//procesamiento de los tweets
-		listDocument4 = process.execute(listDocument4, twitterConfig);
-		//procesamiento de las canciones
-		listDocument3 = process1.execute(listDocument3, spotifyConfig);
-
-		listDocument.addAll(listDocument2);
-		listDocument.addAll(listDocument3);
-		listDocument.addAll(listDocument4);
-
-		//envio de salida
-
-		output.execute(listDocument, slackConfig);
+		Pipeline pipeline = new Pipeline();
+		pipeline.addInput(input1,input2,input3,input4);
+		pipeline.addProcess(process,process1);
+		pipeline.addOutput(output);
+		
+		pipeline.execute();
 
 	}
 

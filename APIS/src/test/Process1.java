@@ -9,12 +9,12 @@
 package test;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import document.Document;
+
 import inputComponents.TwitterSearchInput;
 import outputComponents.EmailOutput;
+import pipeline.Pipeline;
 import processingComponents.TopLikesProcess;
 import processingComponents.TopRetweetsProcess;
 
@@ -44,21 +44,23 @@ public class Process1 {
 
 		//Se le pasan por parámetro los días y los resultados al componente de entrada
 		TwitterSearchInput input = new TwitterSearchInput();
+		input.setConfiguration(twitterConfig);
 		//Se le pasa como parámetro el número de resultados del top.
 		TopLikesProcess process1 = new TopLikesProcess();
+		process1.setConfiguration(twitterConfig);
 		//Se le pasa como parámetro el número de resultados del top.
 		TopRetweetsProcess process2 = new TopRetweetsProcess();
+		process2.setConfiguration(twitterConfig);
 		//Se declara el componente de salida
 		EmailOutput output = new EmailOutput();
+		output.setConfiguration(mailConfig);
 		
 		//Se realiza el flujo de datos.
-
-		List<Document> listDocument = process1.execute(input.execute(twitterConfig), twitterConfig);
-		List<Document> listDocument2 = process2.execute(input.execute(twitterConfig), twitterConfig);
-	
-		listDocument.addAll(listDocument2);
-		output.execute(listDocument, mailConfig);
-		
+		Pipeline pipeline = new Pipeline();
+		pipeline.addInput(input);
+		pipeline.addProcess(process1,process2);
+		pipeline.addOutput(output);
+		pipeline.execute();
 	}
 
 }
