@@ -1,14 +1,17 @@
 
 
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import java.util.Map;
-
+import java.util.Map.Entry;
 
 import inputComponents.*;		//Todos los componentes de entrada
+import jackson.JacksonUtils;
 import outputComponents.*;		//Todos los componentes de salida
 import pipeline.Pipeline;
+import pipeline.ProcessAvailability;
 import processingComponents.*;	//Todos los componentes de procesamiento
 
 
@@ -107,9 +110,9 @@ public class Prueba {
 		//Otros parametros de configuracion para RSS
 		
 		rssConfig2.put("rssUrl", "http://estaticos.marca.com/rss/futbol/primera-division.xml"); //URL del canal RSS
-		rssConfig2.put("limit", "100");
+		rssConfig2.put("limit", "90");
 		rssConfig2.put("intervalEnd", "1");	//Valor del fin de un intervalo de tiempo ( en dias )
-		rssConfig2.put("intervalStart", "100");//Valor del inicio de un intervalo de tiempo ( en dias )
+		rssConfig2.put("intervalStart", "20");//Valor del inicio de un intervalo de tiempo ( en dias )
 		rssConfig2.put("author", "abc");//Valor del inicio de un intervalo de tiempo ( en dias )
 		
 		
@@ -134,17 +137,46 @@ public class Prueba {
 		
 		//OTROS
 		otherConfig.put("top", "10");
-		otherConfig.put("key", "aBc");	
+		otherConfig.put("key", "a");	
 		
+		
+		//INPUT
+		RssInput input = new RssInput();
+		ForecastInput input2 = new ForecastInput();
+		
+		input.setConfiguration(rssConfig2);
+		//PROCESS
+		TimeIntervalRssProcess process = new TimeIntervalRssProcess();
+		process.setConfiguration(rssConfig2);
+		GetNumberOfMatchesGenericProcess processX = new GetNumberOfMatchesGenericProcess();
+		processX.setConfiguration(otherConfig);
+		FilterRepositoriesByAuthorProcess process2 = new FilterRepositoriesByAuthorProcess();
+		process.setConfiguration(githubConfig);
+		//OUTPUT
+		SlackChannelMessageOutput output = new SlackChannelMessageOutput();
+		output.setConfiguration(slackConfig);
+		
+				
 		// USO DE PIPELINE
 		Pipeline pipeline = new Pipeline();
 		
-		pipeline.addInput(new RssInput());
-		pipeline.addProcess(new TimeIntervalRssProcess());
-		pipeline.addOutput(new SlackChannelMessageOutput());
-		
-		pipeline.execute(rssConfig2, rssConfig2, slackConfig);
-		
-		
+//		pipeline.addInput(input);
+//		pipeline.addProcess(process, processX);
+//		pipeline.addOutput(output);
+//
+//		//Ejemplo serialización
+//		String json = JacksonUtils.serialize(pipeline);
+//		System.out.println("JSON de prueba:"+ json);
+//		//Ejemplo deserializacion
+//		Pipeline pipeline2 = new Pipeline();
+//		pipeline2 = JacksonUtils.deserialize(json);
+//		
+//		pipeline2.execute();
+		ProcessAvailability availability = new ProcessAvailability();
+		Map<String, Integer> map = availability.check(input2.getDocument());
+		for (Entry<String, Integer> entry : map.entrySet())
+		{
+		    System.out.println(entry.getKey() + "/" + entry.getValue());
+		}
 	}
 }
