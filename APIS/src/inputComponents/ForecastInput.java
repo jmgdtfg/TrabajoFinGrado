@@ -12,9 +12,26 @@ import openweathermap.AllWeatherData;
 import openweathermap.OpenWeatherMapManager;
 
 public class ForecastInput implements InputComponent{
+	private Document document_ = new ForecastDocument();
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
 
 	@Override
-	public List<Document> execute(Map<String, String> configuration) {
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
+	
+	@Override
+	public Document getDocument() {
+		return document_;
+	}
+
+	@Override
+	public List<Document> execute() {
+		Map<String, String> configuration = this.getConfiguration();
 		OpenWeatherMapManager weather = new OpenWeatherMapManager();
 		List<Document> listDocument = new ArrayList<Document>();
 		
@@ -38,5 +55,6 @@ public class ForecastInput implements InputComponent{
 		}
 		return listDocument;
 	}
+
 
 }

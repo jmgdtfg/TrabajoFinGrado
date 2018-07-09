@@ -15,9 +15,27 @@ import spotify.SpotifyManager;
 
 
 public class SpotifyPlaylistInput implements InputComponent{
+	private Document document_ = new TrackDocument();
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
+
+	@Override
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
+	
+	@Override
+	public Document getDocument() {
+		return document_;
+	}
+
 	//Función que devuelve toda la información de una playlist
 	@Override
-	public List<Document> execute(Map<String, String> configuration) {
+	public List<Document> execute() {
+		Map<String, String> configuration = this.getConfiguration();
 		List<Document> listDocument = new ArrayList<Document>();
 		
 		try {
@@ -36,7 +54,6 @@ public class SpotifyPlaylistInput implements InputComponent{
 		} catch (SpotifyWebApiException | IOException e) {
 			e.printStackTrace();
 		}
-		
 		return listDocument;
 
 	}

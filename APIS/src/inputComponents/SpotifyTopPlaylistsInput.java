@@ -13,9 +13,27 @@ import document.PlaylistSimplifiedDocument;
 import spotify.SpotifyManager;
 
 public class SpotifyTopPlaylistsInput implements InputComponent{
+	private Document document_ = new PlaylistSimplifiedDocument();
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
+
+	@Override
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
+	
+	@Override
+	public Document getDocument() {
+		return document_;
+	}
+
 	//Función que devuelve las top playlist de un determinado país
 	@Override
-	public List<Document> execute(Map<String, String> configuration) {
+	public List<Document> execute() {
+		Map<String, String> configuration = this.getConfiguration();
 
 		List<Document> listDocument = new ArrayList<Document>();
 
@@ -31,7 +49,6 @@ public class SpotifyTopPlaylistsInput implements InputComponent{
 		} catch (SpotifyWebApiException | IOException e) {
 			e.printStackTrace();
 		}
-
 		return listDocument;
 	}
 }

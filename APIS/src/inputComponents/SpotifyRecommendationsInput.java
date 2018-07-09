@@ -13,9 +13,27 @@ import document.TrackSimplifiedDocument;
 import spotify.SpotifyManager;
 
 public class SpotifyRecommendationsInput implements InputComponent{
+	private Document document_ = new TrackSimplifiedDocument();
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
+
+	@Override
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
+	
+	@Override
+	public Document getDocument() {
+		return document_;
+	}
+
 	//Función que devuelve las recomendaciones
 	@Override
-	public List<Document> execute(Map<String, String> configuration) {
+	public List<Document> execute() {
+		Map<String, String> configuration = this.getConfiguration();
 		List<Document> listDocument = new ArrayList<Document>();
 		try {
 			SpotifyManager tm = new SpotifyManager();
@@ -32,9 +50,6 @@ public class SpotifyRecommendationsInput implements InputComponent{
 		} catch (SpotifyWebApiException | IOException e) {
 			e.printStackTrace();
 		}
-
-
-		
 		return listDocument;
 	}
 

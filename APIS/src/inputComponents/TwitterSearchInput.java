@@ -11,9 +11,26 @@ import twitter4j.Status;
 import twitter4j.TwitterException;
 
 public class TwitterSearchInput implements InputComponent{
+	private Document document_ = new TweetDocument();
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
 
 	@Override
-	public List<Document> execute(Map<String, String> configuration) {
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
+	
+	@Override
+	public Document getDocument() {
+		return document_;
+	}
+
+	@Override
+	public List<Document> execute() {
+		Map<String, String> configuration = this.getConfiguration();
 
 		int days = Integer.valueOf(configuration.get("days")).intValue();
 		int results = Integer.valueOf(configuration.get("results")).intValue();
@@ -44,8 +61,6 @@ public class TwitterSearchInput implements InputComponent{
 				e.printStackTrace();
 			}
 		}
-
-
 		return listDocument;
 	}
 }

@@ -10,9 +10,26 @@ import document.StringDocument;
 import slack.SlackManager;
 
 public class SlackOwnChannelsInput implements InputComponent{
+	private Document document_ = new StringDocument();
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
+
+	@Override
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
+	
+	@Override
+	public Document getDocument() {
+		return document_;
+	}
+
 	//Función que devuelve los canales
 	@Override
-	public List<Document> execute(Map<String, String> configuration) {
+	public List<Document> execute() {
 
 		List<Document> listDocument = new ArrayList<Document>();
 		try {
@@ -25,10 +42,7 @@ public class SlackOwnChannelsInput implements InputComponent{
 		} catch (IOException e) {	
 			e.printStackTrace();
 		}
-		return listDocument;
-		
-
-		
+		return listDocument;	
 	}
 
 }

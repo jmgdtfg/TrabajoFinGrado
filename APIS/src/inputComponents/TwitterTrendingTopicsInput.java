@@ -11,9 +11,26 @@ import twitter4j.Trend;
 import twitter4j.TwitterException;
 
 public class TwitterTrendingTopicsInput implements InputComponent{
+	private Document document_ = new TrendDocument();
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
+
+	@Override
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
 	
 	@Override
-	public List<Document> execute(Map<String, String> configuration) {
+	public Document getDocument() {
+		return document_;
+	}
+
+	@Override
+	public List<Document> execute() {
+		Map<String, String> configuration = this.getConfiguration();
 		TwitterManager tm = new TwitterManager();	
 		List<Document> listDocument = new ArrayList<Document>();
 		try {

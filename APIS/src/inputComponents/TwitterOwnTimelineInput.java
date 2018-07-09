@@ -11,9 +11,25 @@ import twitter4j.Status;
 import twitter4j.TwitterException;
 
 public class TwitterOwnTimelineInput implements InputComponent {
+	private Document document_ = new TweetDocument();
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
 
 	@Override
-	public List<Document> execute(Map<String, String> configuration) {
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
+	
+	@Override
+	public Document getDocument() {
+		return document_;
+	}
+
+	@Override
+	public List<Document> execute() {
 		TwitterManager tm = new TwitterManager();
 		
 		//List<TweetDocument> tweets = new ArrayList<TweetDocument>();
@@ -27,7 +43,6 @@ public class TwitterOwnTimelineInput implements InputComponent {
 		} catch (TwitterException e) {
 			e.printStackTrace();
 		}
-		
 		return listDocument;
 	}
 
