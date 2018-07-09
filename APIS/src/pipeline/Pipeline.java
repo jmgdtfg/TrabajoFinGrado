@@ -115,7 +115,7 @@ public class Pipeline {
 
 					}
 					else{
-						System.out.println("ERROR");
+						//System.out.println("ERROR");
 						logs.append(doc.getClass().getName());
 						logs.append(" es INCOMPATIBLE con ");
 						logs.append(process.getClass().getName());
