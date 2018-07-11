@@ -17,27 +17,27 @@ public class ProcessAvailability {
 	private Map<String,Integer> mapAvailability = new HashMap<String,Integer>();
 	
 	private FeedbackTweetsProcess feedbackTweets = new FeedbackTweetsProcess();
-	FilterByRssAuthorProcess filterByRssAuthor = new FilterByRssAuthorProcess();
-	FilterByWeatherCloudinessProcess filterByWeatherCloudiness = new FilterByWeatherCloudinessProcess();
-	FilterByWeatherConditionsProcess filterByWeatherConditions = new FilterByWeatherConditionsProcess();
-	FilterByWeatherHumidityProcess filterByWeatherHumidity = new FilterByWeatherHumidityProcess();
-	FilterByWeatherTempProcess filterByWeatherTemp = new FilterByWeatherTempProcess();
-	FilterRepositoriesByAuthorProcess filterRepositoriesByAuthor = new FilterRepositoriesByAuthorProcess();
-	FilterRepositoriesBySizeProcess filterRepositoriesBySize = new FilterRepositoriesBySizeProcess();
-	GetNumberOfMatchesGenericProcess getNumberOfMatchesGeneric = new GetNumberOfMatchesGenericProcess();
-	RepositoryInformationProcess repositoryInformation = new RepositoryInformationProcess();
-	TimeIntervalMailProcess timeIntervalMail = new TimeIntervalMailProcess();
-	TimeIntervalRepositoryProcess timeIntervalRepository = new TimeIntervalRepositoryProcess();
-	TimeIntervalRssProcess timeIntervalRss = new TimeIntervalRssProcess();
-	TimeIntervalTweetsProcess timeIntervalTweets = new TimeIntervalTweetsProcess();
-	TopArtistsProcess topArtists  = new TopArtistsProcess();
-	TopChannelMessagesReactionsProcess topChannelMessagesReactions = new TopChannelMessagesReactionsProcess();
-	TopFrecuentWordGenericProcess topFrecuentWordGeneric = new TopFrecuentWordGenericProcess();
-	TopLikesProcess topLikes = new TopLikesProcess();
-	TopMostFrecuentMailSendersProcess topMostFrecuentMailSenders = new TopMostFrecuentMailSendersProcess();
-	TopRetweetsProcess topRetweets = new TopRetweetsProcess();
-	TopTracksProcess topTracks = new TopTracksProcess();
-	TranslateGenericProcess translateGeneric = new TranslateGenericProcess();
+	private FilterByRssAuthorProcess filterByRssAuthor = new FilterByRssAuthorProcess();
+	private FilterByWeatherCloudinessProcess filterByWeatherCloudiness = new FilterByWeatherCloudinessProcess();
+	private FilterByWeatherConditionsProcess filterByWeatherConditions = new FilterByWeatherConditionsProcess();
+	private FilterByWeatherHumidityProcess filterByWeatherHumidity = new FilterByWeatherHumidityProcess();
+	private FilterByWeatherTempProcess filterByWeatherTemp = new FilterByWeatherTempProcess();
+	private FilterRepositoriesByAuthorProcess filterRepositoriesByAuthor = new FilterRepositoriesByAuthorProcess();
+	private FilterRepositoriesBySizeProcess filterRepositoriesBySize = new FilterRepositoriesBySizeProcess();
+	private GetNumberOfMatchesGenericProcess getNumberOfMatchesGeneric = new GetNumberOfMatchesGenericProcess();
+	private RepositoryInformationProcess repositoryInformation = new RepositoryInformationProcess();
+	private TimeIntervalMailProcess timeIntervalMail = new TimeIntervalMailProcess();
+	private TimeIntervalRepositoryProcess timeIntervalRepository = new TimeIntervalRepositoryProcess();
+	private TimeIntervalRssProcess timeIntervalRss = new TimeIntervalRssProcess();
+	private TimeIntervalTweetsProcess timeIntervalTweets = new TimeIntervalTweetsProcess();
+	private TopArtistsProcess topArtists  = new TopArtistsProcess();
+	private TopChannelMessagesReactionsProcess topChannelMessagesReactions = new TopChannelMessagesReactionsProcess();
+	private TopFrecuentWordGenericProcess topFrecuentWordGeneric = new TopFrecuentWordGenericProcess();
+	private TopLikesProcess topLikes = new TopLikesProcess();
+	private TopMostFrecuentMailSendersProcess topMostFrecuentMailSenders = new TopMostFrecuentMailSendersProcess();
+	private TopRetweetsProcess topRetweets = new TopRetweetsProcess();
+	private TopTracksProcess topTracks = new TopTracksProcess();
+	private TranslateGenericProcess translateGeneric = new TranslateGenericProcess();
 	
 	/**
 	 * Función que comprobará la disponibilidad de un tipo de documento para todos los procesos
