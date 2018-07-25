@@ -1,0 +1,778 @@
+<html>
+<head>
+<!--  BOOTSTRAP -->
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<link rel="stylesheet" href="css/bootstrapCss/bootstrap.min.css"
+	type="text/css">
+<link rel="stylesheet" href="css/bootstrapCss/bootstrap-grid.min.css"
+	type="text/css">
+<link rel="stylesheet" href="css/bootstrapCss/bootstrap-reboot.min.css"
+	type="text/css">
+<script src="js/bootstrapJs/bootstrap.min.js" type="text/javascript"></script>
+<script src="js/bootstrapJs/bootstrap.bundle.min.js"
+	type="text/javascript"></script>
+
+
+<!-- JAVASCRIPT -->
+<script src="http://www.w3schools.com/lib/w3data.js"></script>
+<script src="js/inputs.js" type="text/javascript"></script>
+<script src="js/process.js" type="text/javascript"></script>
+<script src="js/outputs.js" type="text/javascript"></script>
+<script src="js/Forecast.js" type="text/javascript"></script>
+<script src="js/Email.js" type="text/javascript"></script>
+<script src="js/Twitter.js" type="text/javascript"></script>
+<script src="js/Slack.js" type="text/javascript"></script>
+<script src="js/Github.js" type="text/javascript"></script>
+<script src="js/SpreadSheet.js" type="text/javascript"></script>
+<script src="js/GenericProcess.js" type="text/javascript"></script>
+<!-- Contiene funciones AJAX, validadores del formulario, etc... -->
+<script src="js/common.js" type="text/javascript"></script>
+
+<script>
+var requestJSON = {input_:[],process_:[],output_:[]};
+var checkAvailabilityJSON = {input_:[]};
+</script>
+
+</head>
+
+<!-- HTML -->
+<title>Cliente Web</title>
+<body>
+
+		<div class="row">
+		<div class="col-md-1"></div>
+		
+		<div class="col-md-3 text-center"><img src="icons/uco-icon.png" style="width: 200px; height: 90px;"></div>
+		<div class="col-md-4 text-center"> <br><h2 style="color:353535;">Cliente Web TFG</h2> </div>
+		<div class="col-md-3 text-center"><img src="icons/epsc-icon.png" style="width: 320px; height: 100px;"></div>
+		
+		
+		<div class="col-md-1"></div>
+		
+		</div>
+
+
+
+	<div class="row">
+		<div class="col-md-1"></div>
+		<!-- COMIENZO COLUMNA INPUT -->
+		<div class="col-md-5" style="background-color: #E3E3E3">
+
+			<hr>
+			<h5 align=center>
+				<!--  <img src="icons/input.png" style="width: 18px; height: 18px;">-->
+				Fuentes de información
+			</h5>
+			<hr>
+
+			<div class="form-group">
+				<label for="exampleFormControlSelect1">Listado de inputs disponibles</label> <select
+					class="form-control" name="exampleFormControlSelect" id="exampleFormControlSelect" >
+					<option value="nothing">Sin seleccion</option>
+					<!-- <option value="WeatherInput">Obtener información meteorológica (OpenWeather)</option> -->
+					<option value="ForecastInput">Predicción meteorológica(Openweather)</option>
+					<option value="GithubOwnRepositoriesInput">Obtener repositorios propios (Github)</option>
+					<option value="GithubRepositoryInput">Obtener toda la información de un repositorio(Github)</option>
+					<option value="GithubSearchRepositoryInput">Buscar repositorios (Github)</option>
+					<option value="MailInboxInput">Obtener bandeja de entrada (Email)</option>
+					<option value="MailSearchInboxInput">Buscar en la bandeja de entrada (Email)</option>
+					<option value="RssInput">Obtener información de un canal RSS</option>
+					<option value="SlackChannelMessagesInput">Obtener mensajes de un canal (Slack)</option>
+					<option value="SlackOwnChannelsInput">Obtener canales propios de (Slack)</option>
+					<option value="SlackUserListInput">Obtener lista de usuarios de la sesión actual (Slack) </option>
+					<option value="SpotifyHitsByCountryInput">Canciones más escuchadas de un país (Spotify)</option>
+					<option value="SpotifyPlaylistInput">Obtener Playlist (Spotify)</option>
+					<option value="SpotifyRecommendations">Obtener canciones recomendadas (Spotify)</option>
+					<option value="SpotifySearchInput">Buscar en Spotify</option>
+					<option value="SpotifyTopPlaylistInput">Playlist más escuchadas por país (Spotify)</option>
+					<option value="SpreadSheetInput">Obtener información de una hoja de cálculo (SpreadSheet)</option>
+					<option value="TwitterOwnTimelineInput">Obtener el propio timeline (Twitter)</option>
+					<option value="TwitterSearchInput">Buscar en Twitter</option>
+					<option value="TwitterTrendingTopicsInput">Obtener trending topics (Twitter)</option>
+					<option value="TwitterUserTimeline">Obtener timeline de un usuario (Twitter)</option>
+				</select>
+			</div>
+
+
+
+				<!-- INICIO FORMULARIO Wheater -->
+				<form class="needs-validation" id="weatherInputForm" novalidate>
+					<div class="form-row">
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #B5C2FF">
+							<br>  <img src="icons/icono-sheet.png"
+								style="width: 60px; height: 60px;">
+						</div>
+						<div class="col-md-4 mb-3" style="background-color: #B5C2FF">
+							<br> <label for="weatherCity">Nombre de la ciudad</label> <input
+								type="text" class="form-control" id="weatherCity"
+								placeholder="Ciudad" required>
+							<div class="valid-feedback">Correcto</div>
+							<br>
+						</div>
+
+						<div class="col-md-4 mb-3" style="background-color: #B5C2FF">
+
+						</div>
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #B5C2FF">
+							<br> <br> 
+							<button class="btn btn-success" type="button" onClick="weatherInput(weatherCity)">Añadir</button>
+						</div>
+					</div>
+
+
+				</form>
+
+<!-- INICIO FORMULARIO FORECAST -->
+				<form class="needs-validation" id="forecastInputForm" novalidate>
+					<div class="form-row">
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br>  <img src="icons/openweathermap-icon.png"
+								style="width: 60px; height: 60px;">
+						</div>
+						<div class="col-md-4 mb-3" style="background-color: #BDBCCF">
+							<br> <label for="weatherCity">Nombre de la ciudad</label> <input
+								type="text" class="form-control" id="weatherCity"
+								placeholder="Ciudad" required>
+							<div class="valid-feedback">Correcto</div>
+							<br>
+						</div>
+
+						<div class="col-md-4 mb-3" style="background-color: #BDBCCF">
+
+						</div>
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br> <br> 
+							<button class="btn btn-success" type="button" onClick="forecastInput(weatherCity)">Añadir</button>
+						</div>
+					</div>
+
+
+				</form>
+				Elementos agregados
+
+		<h6><div id="inputInfo" style="color:green;"></div></h6>
+		</div>
+		<!-- FIN COLUMNA INPUT -->
+
+		<!-- COMIENZO COLUMNA PROCESS -->
+		<div class="col-md-5" style="background-color: E3E3E3">
+			<hr>
+			<h5 align=center>Procesamiento</h5>
+			<hr>
+			<div class="form-group">
+				<label for="processSelect">Listado de elementos de procesamiento disponibles</label> <select
+					class="form-control" name="processSelect" id="processSelect">
+					</select>
+			</div>
+			
+		<!-- INICIO FORMULARIO FILTRAR POR NUBOSIDAD -->
+				<form class="needs-validation" id="filterByCloudinessForm" novalidate>
+					<div class="form-row">
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br>  <img src="icons/openweathermap-icon.png"
+								style="width: 60px; height: 60px;">
+						</div>
+						<div class="col-md-8 mb-3" style="background-color: #BDBCCF">
+	
+						<div class="form-group">
+						
+						    <label for="formControlRange">Minimo de nubosidad (%): </label>
+						    <output name="minCloudiness" id="minId">50</output> 
+						    <input type="range" class="form-control-range" id="cloudinessRangeMin" value="50" min="0" max="100" oninput="minId.value = cloudinessRangeMin.value">
+					 	 	
+					 	 </div>
+	
+						<div class="form-group">
+						    <label for="formControlRange">Maximo de nubosidad (%): </label>
+						    <output name="maxCloudiness" id="maxId">50</output> 
+						    <input type="range" class="form-control-range" id="cloudinessRangeMax" value="50" min="0" max="100" oninput="maxId.value = cloudinessRangeMax.value">
+					 	 
+					 	 </div>
+	
+						</div>
+
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br> <br> 
+							<button class="btn btn-success" type="button" onClick="filterByCloudiness(cloudinessRangeMin,cloudinessRangeMax)">Añadir</button>
+						</div>
+					</div>
+
+
+				</form>	
+				
+						<!-- INICIO FORMULARIO FILTRAR POR Temperatura -->
+				<form class="needs-validation" id="filterByTempForm" novalidate>
+					<div class="form-row">
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br>  <img src="icons/openweathermap-icon.png"
+								style="width: 60px; height: 60px;">
+						</div>
+						<div class="col-md-8 mb-3" style="background-color: #BDBCCF">
+	
+						<div class="form-group">
+						
+						    <label for="formControlRange">Temperatura minima (º): </label>
+						    <output name="minTemp" id="minId">0</output> 
+						    <input type="range" class="form-control-range" id="tempRangeMin" value="0" min="-50" max="50" oninput="minId.value = tempRangeMin.value">
+					 	 	
+					 	 </div>
+	
+						<div class="form-group">
+						    <label for="formControlRange">Temperatura maxima (º): </label>
+						    <output name="maxTemp" id="maxId">10</output> 
+						    <input type="range" class="form-control-range" id="tempRangeMax" value="10" min="-50" max="70" oninput="maxId.value = tempRangeMax.value">
+					 	 
+					 	 </div>
+	
+						</div>
+
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br> <br> 
+							<button class="btn btn-success" type="button" onClick="filterByTemp(tempRangeMin,tempRangeMax)">Añadir</button>
+						</div>
+					</div>
+
+
+				</form>	
+				
+				
+				<!-- INICIO FORMULARIO OBTENER TOP PALABRAS MÁS FRECUENTES -->
+				<form class="needs-validation" id="mostUsedWordsForm" novalidate>
+					<div class="form-row">
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br>  <img src="icons/palabras-icon.png"
+								style="width: 130px; height: 75px;">
+						</div>
+						<div class="col-md-8 mb-3" style="background-color: #BDBCCF">
+	
+						<div class="form-group">
+						    <label for="top">Número de resultados (de mayor a menor frecuencia): </label> 
+						    <input type="number" class="form-control" id="top" placeholder="5" value="5" min=1 required>
+									<div class="valid-feedback">Correcto</div>
+					 	 </div>
+	
+						</div>
+
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br> <br> 
+							<button class="btn btn-success" type="button" onClick="mostUsedWord(top)">Añadir</button>
+						</div>
+					</div>
+
+
+				</form>	
+				
+								
+				<!-- INICIO FORMULARIO OBTENER NÚMERO DE COINCIDENCIAS -->
+				<form class="needs-validation" id="matchesForm" novalidate>
+					<div class="form-row">
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							 <br><img src="icons/matches-icon.png"
+								style="width: 40px; height: 40px;">
+						</div>
+						<div class="col-md-8 mb-3" style="background-color: #BDBCCF">
+	
+						<div class="form-group">
+						    <label for="key">Buscar número de coincidencias de la palabra</label> <input
+								type="text" class="form-control" id="key"
+								placeholder="palabra clave" required>
+								<div class="valid-feedback">Correcto</div>
+					 	 </div>
+	
+						</div>
+
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br>
+							<button class="btn btn-success" type="button" onClick="getMatches(key)">Añadir</button>
+						</div>
+					</div>
+
+
+				</form>	
+				
+						<!-- INICIO FORMULARIO FILTRAR POR CONDICION -->
+				<form class="needs-validation" id="filterByConditionForm" novalidate>
+					<div class="form-row">
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br>  <img src="icons/openweathermap-icon.png"
+								style="width: 60px; height: 60px;">
+						</div>
+						<div class="col-md-8 mb-3" style="background-color: #BDBCCF">
+	
+									<div class="form-group">
+				<label for="condition">Listado de condiciones meteorológicas disponibles</label> 
+				<select
+					class="form-control" name="condition" id="condition" >
+						<option value="nothing">Sin seleccion</option>
+						<option value="tormenta">tormenta</option>
+						<option value="llovizna">llovizna</option>
+						<option value="lluvia">lluvia</option>
+						<option value="aguacero">lluvia torrencial</option>
+						<option value="nieve">nieve</option>
+						<option value="aguanieve">aguanieve</option>
+						<option value="niebla">niebla</option>
+						<option value="nube de contaminación">nube de contaminación</option>
+						<option value="calina">calina</option>
+						<option value="remolinos de polvo">remolinos</option>
+						<option value="arena">arena</option>
+						<option value="polvo">polvo</option>
+						<option value="chubascos">chubasco</option>
+						<option value="tornado">tornado</option>
+						<option value="cielo despejado">cielo despejado</option>
+						<option value="nubes dispersas">nubes dispersas</option>
+						<option value="nubes rotas">nubes rotas</option>
+						<option value="nubes de tormenta">nubes de tormenta</option>
+						<option value="tormenta tropical">tormenta tropical</option>
+						<option value="huracán">huracán</option>
+						<option value="frío">frío</option>
+						<option value="caliente">calor</option>
+						<option value="granizo">granizo</option>
+						<option value="brisa">brisa</option>
+						<option value="vendaval">vendaval</option>
+			
+								</select>
+						</div>
+	
+						</div>
+
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br> 
+							<button class="btn btn-success" type="button" onClick="filterByCondition(condition)">Añadir</button>
+						</div>
+					</div>
+
+
+				</form>	
+			
+			
+			
+				<!-- INICIO FORMULARIO FILTRAR POR TRANSLATE -->
+				<form class="needs-validation" id="translatorForm" novalidate>
+					<div class="form-row">
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br>  <img src="icons/translator-icon.png"
+								style="width: 50px; height: 50px;">
+						</div>
+						<div class="col-md-8 mb-3" style="background-color: #BDBCCF">
+	
+									<div class="form-group">
+				<label for="condition">Listado de idiomas disponibles</label> 
+				<select
+					class="form-control" name="language" id="language" >
+						<option value="nothing">Sin seleccion</option>
+						<option value="english">Inglés</option>
+						<option value="spanish">Español</option>
+						<option value="italian">Italiano</option>
+						<option value="germany">Alemán</option>
+						<option value="frances">Francés</option>
+					</select>
+						</div>
+	
+						</div>
+
+						<div class="col-md-2 mb-3 text-center"
+							style="background-color: #BDBCCF">
+							<br> 
+							<button class="btn btn-success" type="button" onClick="translateG(language)">Añadir</button>
+						</div>
+					</div>
+
+
+				</form>	
+		Procesamiento agregado
+
+		<h6><div id="processInfo" style="color:green;"></div></h6>
+
+		<p style="font-size:70%;color:red;">*Importante: El orden de los elementos de procesamiento influye</p>
+
+		</div>
+		<!-- FIN COLUMNA PROCESS -->
+	</div>
+	<!-- FIN CLASS-ROW -->
+	<br>
+	<div class="row">
+		<!-- COMIENZO COLUMNA OUTPUT -->
+		<div class="col-md-1"></div>
+		<div class="col-md-10" style="background-color: lavender;">
+			<hr>
+			<h5 align=center>Salidas disponibles para la información</h5>
+			<hr>
+
+			<!-- INICIO Collapse -->
+
+			<div id="accordion">
+				<div class="card">
+					<div class="card-header" id="headingOne">
+						<h5 class="mb-0 text-center">
+							<button class="btn btn-info" data-toggle="collapse"
+								data-target="#collapseOne" aria-expanded="true"
+								aria-controls="collapseOne" style="width: 200px; height: 40px;">Email</button>
+						</h5>
+					</div>
+
+					<div id="collapseOne" class="collapse"
+						aria-labelledby="headingOne" data-parent="#accordion">
+					<h6><div id="emailOutputInfo" style="color:blue;"></div></h6>
+						<!-- INICIO FORMULARIO EMAIL -->
+						<form class="needs-validation" id="emailForm" novalidate>
+							<div class="form-row">
+								<div class="col-md-2 mb-3 text-center"
+									style="background-color: #B5C2FF">
+									<br><br> <br> <img src="icons/icono-email.png"
+										style="width: 80px; height: 80px;">
+								</div>
+								<div class="col-md-4 mb-3" style="background-color: #B5C2FF">
+									<br> <label for="user">Email emisor</label> <input
+										type="email" class="form-control" id="user"
+										placeholder="Email válido" required>
+									<div class="valid-feedback">Correcto</div>
+									<hr>
+									<label for="emailList">Lista de destinatarios</label> <input type="text"
+										class="form-control" id="emailList"
+										placeholder="a@gmail.com,b@outlook.com" required>
+									<div class="valid-feedback">Correcto</div>
+									<br>
+									<h6 align="right">Servidor:</h6>
+								</div>
+
+								<div class="col-md-4 mb-3" style="background-color: #B5C2FF">
+									<br> <label for="password">Contraseña</label> <input
+										type="password" class="form-control" id="password"
+										placeholder="Contraseña" required>
+									<div class="valid-feedback">Correcto</div>
+									<hr>
+									<label for="subject">Asunto del mensaje</label> <input
+										type="text" class="form-control" id="subject"
+										placeholder="Asunto" required>
+									<div class="valid-feedback">Correcto</div>
+									<br> 
+									<label class="radio-inline">
+									<input	type="radio" name="optradio" id="server" value="gmail">gmail</label> 
+									<label	class="radio-inline">
+									<input type="radio" name="optradio" id="server" value="hotmail" checked>hotmail</label>
+								</div>
+								<div class="col-md-2 mb-3 text-center"
+									style="background-color: #B5C2FF">
+									<br> <br> <br> <br>
+									<button class="btn btn-success" type="button" onClick="sendEmail(user,password,server,emailList,subject)">Añadir</button>
+								</div>
+							</div>
+
+
+						</form>
+						<!-- FIN FORMULARIO EMAIL -->
+					</div>
+				</div>
+
+				<div class="card">
+					<div class="card-header" id="heading2">
+						<h5 class="mb-0 text-center">
+							<button class="btn btn-info" data-toggle="collapse"
+								data-target="#collapse2" aria-expanded="true"
+								aria-controls="collapse2" style="width: 200px; height: 40px;">Mensaje directo Slack</button>
+						</h5>
+					</div>
+
+					<div id="collapse2" class="collapse"
+						aria-labelledby="heading2" data-parent="#accordion">
+					<h6><div id="slackMDOutputInfo" style="color:blue;"></div></h6>
+						<!-- INICIO FORMULARIO MD SLACK -->
+						<form class="needs-validation" id="slackMdForm" novalidate>
+							<div class="form-row">
+								<div class="col-md-2 mb-3 text-center"
+									style="background-color: #B5C2FF">
+									<br><img src="icons/icono-slack.png"
+										style="width: 80px; height: 80px;">
+								</div>
+								<div class="col-md-8 mb-3" style="background-color: #B5C2FF">
+									<br> <label for="slackUserMail">Slack-Email del destinatario</label> <input
+										type="email" class="form-control" id="slackUserMail"
+										placeholder="Email válido" style="width: 500px;" required>
+									<div class="valid-feedback">Correcto</div>
+									<br>
+									
+								</div>
+
+								<div class="col-md-2 mb-3 text-center"
+									style="background-color: #B5C2FF">
+									<br> <br> 
+									<button class="btn btn-success" type="button" onClick="sendSlackMD(slackUserMail)">Añadir</button>
+								</div>
+								
+							</div>
+							
+
+
+						</form>
+						<!-- FIN FORMULARIO MD SLACK -->
+					</div>
+				</div>
+
+				<div class="card">
+					<div class="card-header" id="heading3">
+						<h5 class="mb-0 text-center">
+							<button class="btn btn-info" data-toggle="collapse"
+								data-target="#collapse3" aria-expanded="true"
+								aria-controls="collapse3" style="width: 200px; height: 40px;">Grupo (channel) Slack</button>
+						</h5>
+					</div>
+
+					<div id="collapse3" class="collapse"
+						aria-labelledby="heading3" data-parent="#accordion">
+						<h6><div id="slackChannelOutputInfo" style="color:blue;"></div></h6>
+						<!-- INICIO FORMULARIO CHANNEL SLACK -->
+						<form class="needs-validation" id="slackChannelForm" novalidate>
+							<div class="form-row">
+								<div class="col-md-2 mb-3 text-center"
+									style="background-color: #B5C2FF">
+									<br><img src="icons/icono-slack.png"
+										style="width: 80px; height: 80px;">
+								</div>
+								<div class="col-md-8 mb-3" style="background-color: #B5C2FF">
+									<br><label for="channelName">Nombre del grupo</label> <input
+										type="text" class="form-control" id="channelName"
+										placeholder="Nombre del grupo" required>
+									<div class="valid-feedback">Correcto</div>
+									<br>
+								</div>
+
+								
+								<div class="col-md-2 mb-3 text-center"
+									style="background-color: #B5C2FF">
+									<br> <br>
+									<button class="btn btn-success" type="button" onClick="sendSlackChannel(channelName)">Añadir</button>
+								</div>
+							</div>
+
+
+						</form>
+						<!-- FIN FORMULARIO SLACK -->
+					</div>
+				</div>
+
+
+				<div class="card">
+					<div class="card-header" id="heading4">
+						<h5 class="mb-0 text-center">
+							<button class="btn btn-info" data-toggle="collapse"
+								data-target="#collapse4" aria-expanded="true"
+								aria-controls="collapse4" style="width: 200px; height: 40px;">Github GIST</button>
+						</h5>
+					</div>
+
+					<div id="collapse4" class="collapse"
+						aria-labelledby="heading4" data-parent="#accordion">
+					<h6><div id="gistOutputInfo" style="color:blue;"></div></h6>
+						<!-- INICIO FORMULARIO GIST -->
+						<form class="needs-validation" id="gistForm" novalidate>
+							<div class="form-row">
+								<div class="col-md-2 mb-3 text-center"
+									style="background-color: #B5C2FF">
+									<br><br> <img src="icons/icono-github.png"
+										style="width: 80px; height: 80px;">
+								</div>
+								<div class="col-md-4 mb-3" style="background-color: #B5C2FF">
+									<br> <label for="gistDescription">Descripción</label> <input
+										type="text" class="form-control" id="gistDescription"
+										placeholder="Descripción" required>
+									<div class="valid-feedback">Correcto</div>
+									<br>
+		
+								</div>
+
+								<div class="col-md-4 mb-3" style="background-color: #B5C2FF">
+									<br> <label for="gistName">Nombre</label> <input
+										type="text" class="form-control" id="gistName"
+										placeholder="Nombre" required>
+									<div class="valid-feedback">Correcto</div>
+									<hr>
+									<h6>
+									<label for="user">El resultado será publicado <a href="https://gist.github.com/jmgdtfg">AQUÍ</a></label> 
+									</h6>
+									<br>
+									
+								</div>
+								<div class="col-md-2 mb-3 text-center"
+									style="background-color: #B5C2FF">
+									<br><br><br>
+									<button class="btn btn-success" type="button" onClick="sendGist(gistDescription,gistName)">Añadir</button>
+								</div>
+							</div>
+
+
+						</form>
+						<!-- FIN FORMULARIO GIST -->
+					</div>
+				</div>
+
+
+
+				<div class="card">
+					<div class="card-header" id="heading5">
+						<h5 class="mb-0 text-center">
+							<button class="btn btn-info" data-toggle="collapse"
+								data-target="#collapse5" aria-expanded="true"
+								aria-controls="collapse5" style="width: 200px; height: 40px;">Google Sheet</button>
+						</h5>
+					</div>
+
+					<div id="collapse5" class="collapse"
+						aria-labelledby="heading5" data-parent="#accordion">
+						<h6><div id="sheetOutputInfo" style="color:blue;"></div></h6>
+						<!-- INICIO FORMULARIO SHEET -->
+						<form class="needs-validation" id="sheetForm" novalidate>
+							<div class="form-row">
+								<div class="col-md-2 mb-3 text-center"
+									style="background-color: #B5C2FF">
+									<br> <br> <img src="icons/icono-sheet.png"
+										style="width: 80px; height: 80px;">
+								</div>
+								<div class="col-md-4 mb-3" style="background-color: #B5C2FF">
+									<br> <label for="sheetName">Nombre de la hoja de cálculo</label> <input
+										type="email" class="form-control" id="sheetName"
+										placeholder="Nombre" required>
+									<div class="valid-feedback">Correcto</div>
+									<hr>
+									<label for="initRow">Fila inicial</label> <input type="number"
+										class="form-control" id="initRow"
+										placeholder="1" value="1" min=1 required>
+									<div class="valid-feedback">Correcto</div>
+									<br>
+								</div>
+
+								<div class="col-md-4 mb-3" style="background-color: #B5C2FF">
+									<br> <br><br><br><hr>
+									<label for="maxColumn">Número de columnas</label> <input
+										type="number" class="form-control" id="maxColumn"
+										placeholder="5" value=1 min=1 required>
+									<div class="valid-feedback">Correcto</div>
+									<br> 
+								</div>
+								<div class="col-md-2 mb-3 text-center"
+									style="background-color: #B5C2FF">
+									<br> <br> <br> <br>
+									<button class="btn btn-success" type="button" onClick="sendSpreadSheet(initRow,maxColumn,sheetName)">Añadir</button>
+								</div>
+							</div>
+
+
+						</form>
+						<!-- FIN FORMULARIO SHEET -->
+					</div>
+				</div>
+
+				<div class="card">
+					<div class="card-header" id="heading6">
+						<h5 class="mb-0 text-center">
+							<button class="btn btn-info" data-toggle="collapse"
+								data-target="#collapse6" aria-expanded="true"
+								aria-controls="collapse6" style="width: 200px; height: 40px;">Twitter</button>
+						</h5>
+					</div>
+
+					<div id="collapse6" class="collapse"
+						aria-labelledby="heading6" data-parent="#accordion">
+						<h6><div id="twitterOutputInfo" style="color:blue;"></div></h6>
+
+						<!-- INICIO FORMULARIO TWITTER -->
+						<form class="needs-validation" id="twitterForm" novalidate>
+							<div class="form-row">
+								<div class="col-md-2 mb-3 text-center"
+									style="background-color: #B5C2FF">
+									<br> <img src="icons/icono-twitter.png"
+										style="width: 80px; height: 80px;">
+								</div>
+								<div class="col-md-8 mb-3 text-center" style="background-color: #B5C2FF">
+								<h6>
+									<br><br><br> <label for="user">El resultado será publicado <a href="https://twitter.com/jmgd_tfg">AQUÍ</a> (https://twitter.com/jmgd_tfg)</label> 
+									</h6>
+									<div class="valid-feedback">Correcto</div>
+									<br>
+									
+								</div>
+
+								
+								<div class="col-md-2 mb-3 text-center"
+									style="background-color: #B5C2FF">
+									<br> <br>
+									<button class="btn btn-success" type="button" onClick="sendTwitter()">Añadir</button>
+								</div>
+							</div>
+
+
+						</form>
+						<!-- FIN FORMULARIO TWITTER -->
+					</div>
+				</div>
+
+				<!-- FIN COLLAPSE -->
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+		</div>
+
+		<!-- FIN COLUMNA OUTPUT -->
+		<div class="col-md-1"></div>
+	</div>
+	<!-- FIN CLASS-ROW -->
+	<br>
+	<div class=row>
+
+		<div class="col-md-12 text-center">
+			<button id="singlebutton" name="singlebutton" class="btn btn-success" onClick="ajaxSendRequest()">¡Enviar
+				información!</button>
+		</div>
+
+	</div>
+	<br>
+	<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-8 text-center ">
+	
+		<h4 align=center>Resultado</h4>
+		<br>
+
+			<div class="alert alert-warning" role="alert">
+			<h6>
+			<hr>
+			<div id="resultInfo" style="color:353535;">
+			
+			</div>
+			
+<hr></h6>
+	</div>
+	<hr>
+	</div>
+	</div>
+	<br>
+	
+
+
+
+
+</body>
+</html>
