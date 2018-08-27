@@ -15,6 +15,16 @@ import mail.MessageData;
 
 
 public class TopMostFrecuentMailSendersProcess implements ProcessComponent{
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
+
+	@Override
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Document> execute(List<Document> data, Map<String, String> configuration) {

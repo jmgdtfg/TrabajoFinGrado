@@ -10,7 +10,16 @@ import ibm.Translator;
 
 
 public class TranslateGenericProcess implements ProcessComponent{
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
 
+	@Override
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
 	@Override
 	public List<Document> execute(List<Document> data, Map<String, String> configuration) {
 		List<Document> listDocument = new ArrayList<Document>();
@@ -18,7 +27,7 @@ public class TranslateGenericProcess implements ProcessComponent{
 		String message = "";
 		//Proceso de ordenación 
 		for (Document document : data){
-			message += document.getDataAsString();
+			message += document.getDataAsString()+"\n";
 		}
 		String result = translator.translate(message, configuration.get("language"));
 		StringDocument document = new StringDocument();

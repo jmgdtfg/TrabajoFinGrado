@@ -10,6 +10,16 @@ import document.Document;
 import google.SpreadSheetManager;
 
 public class SpreadSheetOutput implements OutputComponent{
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
+
+	@Override
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	} 
 
 	@Override
 	public void execute(List<Document> data, Map<String, String> configuration) {

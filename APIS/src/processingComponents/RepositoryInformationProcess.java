@@ -17,6 +17,16 @@ import document.FileMapDocument;
 import github.GithubManager;
 
 public class RepositoryInformationProcess implements ProcessComponent{
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
+
+	@Override
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
 	//Función que obtiene la información de un repositorio.
 	@Override
 	public List<Document> execute(List<Document> data, Map<String, String> configuration) {

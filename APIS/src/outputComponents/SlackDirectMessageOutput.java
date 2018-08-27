@@ -8,6 +8,16 @@ import document.Document;
 import slack.SlackManager;
 
 public class SlackDirectMessageOutput implements OutputComponent{
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
+
+	@Override
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	} 
 	//Función que envía los datos por un mensaje directo de slack
 	@Override
 	public void execute(List<Document> data, Map<String, String> configuration) {

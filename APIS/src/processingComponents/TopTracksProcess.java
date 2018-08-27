@@ -11,7 +11,16 @@ import document.Document;
 import document.TrackDocument;
 
 public class TopTracksProcess implements ProcessComponent{
-	
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
+
+	@Override
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
 
 	//Función que devuelve las canciones más escuchadas de una playlist
 	@Override

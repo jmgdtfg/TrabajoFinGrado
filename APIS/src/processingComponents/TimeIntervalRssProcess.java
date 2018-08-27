@@ -18,7 +18,16 @@ import document.RssMapDocument;
 
 @SuppressWarnings("unchecked")
 public class TimeIntervalRssProcess implements ProcessComponent{
+	private Map<String, String> configuration_;
+	@Override
+	public Map<String, String> getConfiguration() {
+		return configuration_;
+	}
 
+	@Override
+	public void setConfiguration(Map<String, String> configuration) {
+		configuration_ = configuration;
+	}
 	@Override
 	public List<Document> execute(List<Document> data, Map<String, String> configuration) {
 		int intervalEnd = Integer.valueOf(configuration.get("intervalEnd")).intValue();
